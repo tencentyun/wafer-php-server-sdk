@@ -8,12 +8,13 @@ class LoginService {
         try {
             $data = self::getLoginData();
             list($status, $body) = array_values(self::sendRequest($data));
+            // var_export(compact('status', 'body'));
 
             if ($status !== 200) {
                 throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
             }
 
-            if (gettype($body) !== 'array') {
+            if (!is_array($body)) {
                 throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
             }
 
@@ -43,12 +44,13 @@ class LoginService {
         try {
             $data = self::getCheckData();
             list($status, $body) = array_values(self::sendRequest($data));
+            // var_export(compact('status', 'body'));
 
             if ($status !== 200) {
                 throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
             }
 
-            if (gettype($body) !== 'array') {
+            if (!is_array($body)) {
                 throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
             }
 
