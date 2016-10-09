@@ -2,5 +2,5 @@
 namespace QCloud_WeApp_SDK;
 
 class Conf {
-    const AUTH_URL = 'http://mina.auth.com:7575';
+    const AUTH_URL = 'http://mina.auth.com';
 }

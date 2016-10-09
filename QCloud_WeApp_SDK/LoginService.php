@@ -78,7 +78,7 @@ class LoginService {
 
     public static function writeError($err) {
         if (!($err instanceof LoginServiceException)) {
-            throw new \Exception('unknown error passed to LoginService::writeError');
+            throw new Exception('unknown error passed to LoginService::writeError');
         }
 
         $result = array();
