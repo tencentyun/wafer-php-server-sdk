@@ -40,7 +40,9 @@ class LoginService {
             }
 
         } catch (Exception $e) {
-            throw new LoginServiceException(Constants::ERR_LOGIN_FAILED, $e->getMessage());
+            $error = new LoginServiceException(Constants::ERR_LOGIN_FAILED, $e->getMessage());
+            self::writeError($error);
+            throw $error;
         }
     }
 
@@ -75,18 +77,17 @@ class LoginService {
 
         } catch (Exception $e) {
             if ($e instanceof LoginServiceException) {
-                throw $e;
+                $error = $e;
+            } else {
+                $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
             }
 
-            throw new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
+            self::writeError($error);
+            throw $error;
         }
     }
 
-    public static function writeError($err) {
-        if (!($err instanceof LoginServiceException)) {
-            throw new Exception('unknown error passed to LoginService::writeError');
-        }
-
+    private static function writeError($err) {
         $result = array();
         $result[Constants::WX_SESSION_MAGIC_ID] = 1;
         $result['error'] = $err->getType();
