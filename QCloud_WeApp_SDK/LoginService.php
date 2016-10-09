@@ -93,7 +93,7 @@ class LoginService {
         return Http::jsonPost(array(
             'url' => Conf::AUTH_URL,
             'data' => $data,
-            'timeout' => 15,
+            'timeout' => 15 * 1000,
         ));
     }
 

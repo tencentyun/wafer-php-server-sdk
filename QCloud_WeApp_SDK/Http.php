@@ -11,7 +11,7 @@ class Http {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
 
         if (isset($options['timeout'])) {
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['timeout']);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $options['timeout']);
         }
 
         if (isset($options['data'])) {
