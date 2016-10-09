@@ -1,5 +1,5 @@
 <?php
-namespace QCloud_WeApp_SDK;
+namespace QCloud_WeApp_SDK\Auth;
 
 class Constants {
     const WX_HEADER_CODE = 'X-WX-Code';

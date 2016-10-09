@@ -1,7 +1,11 @@
 <?php
-namespace QCloud_WeApp_SDK;
+namespace QCloud_WeApp_SDK\Auth;
 
 use \Exception as Exception;
+
+use \QCloud_WeApp_SDK\Conf as Conf;
+use \QCloud_WeApp_SDK\Helper\Util as Util;
+use \QCloud_WeApp_SDK\Helper\Http as Http;
 
 class LoginService {
     public static function login() {

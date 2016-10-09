@@ -1,5 +1,5 @@
 <?php
-namespace QCloud_WeApp_SDK;
+namespace QCloud_WeApp_SDK\Helper;
 
 class Http {
     public static function jsonPost($options) {
