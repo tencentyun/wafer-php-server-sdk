@@ -11,6 +11,6 @@ class Util {
 
     public static function writeJsonResult($obj) {
         header('Content-type: application/json; charset=utf-8');
-        echo json_encode($obj);
+        echo json_encode($obj, JSON_FORCE_OBJECT);
     }
 }
