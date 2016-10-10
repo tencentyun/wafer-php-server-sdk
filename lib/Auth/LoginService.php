@@ -61,7 +61,7 @@ class LoginService {
             self::checkResult($status, $body);
 
             switch ($body['returnCode']) {
-            case 0:
+            case Constants::RETURN_CODE_SUCCESS:
                 $returnData = $body['returnData'];
 
                 return array(
@@ -73,8 +73,9 @@ class LoginService {
                 );
                 break;
 
-            case 60011:
-                throw new LoginServiceException(Constants::ERR_SESSION_EXPIRED, $body['returnMessage']);
+            case Constants::RETURN_CODE_SKEY_EXPIRED:
+            case Constants::RETURN_CODE_WX_SESSION_FAILED:
+                throw new LoginServiceException(Constants::ERR_INVALID_SESSION, $body['returnMessage']);
                 break;
 
             default:
