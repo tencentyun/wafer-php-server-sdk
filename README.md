@@ -80,7 +80,7 @@ if ($result['code'] === 0) {
 ```
 
 ```php
-// 样例2: 处理 cgi 请求时校验登录态
+// 样例2: 处理业务 cgi 请求时校验登录态
 $result = LoginService::check();
 
 if ($result['code'] !== 0) {
