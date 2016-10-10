@@ -14,13 +14,7 @@ class LoginService {
             list($status, $body) = array_values(self::sendRequest($data));
             // var_export(compact('status', 'body'));
 
-            if ($status !== 200) {
-                throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
-            }
-
-            if (!is_array($body)) {
-                throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
-            }
+            self::checkResult($status, $body);
 
             if ($body['returnCode'] === 0) {
                 $returnData = $body['returnData'];
@@ -64,13 +58,7 @@ class LoginService {
             list($status, $body) = array_values(self::sendRequest($data));
             // var_export(compact('status', 'body'));
 
-            if ($status !== 200) {
-                throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
-            }
-
-            if (!is_array($body)) {
-                throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
-            }
+            self::checkResult($status, $body);
 
             switch ($body['returnCode']) {
             case 0:
@@ -155,5 +143,15 @@ class LoginService {
                 'para' => $data,
             ),
         );
+    }
+
+    private static function checkResult($status, $body) {
+        if ($status !== 200) {
+            throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
+        }
+
+        if (!is_array($body)) {
+            throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
+        }
     }
 }
