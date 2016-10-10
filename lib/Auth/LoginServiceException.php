@@ -7,9 +7,8 @@ class LoginServiceException extends Exception {
     protected $type;
 
     public function __construct($type, $message, $code = 0, Exception $previous = NULL) {
-        $this->type = $type;
-
         parent::__construct($message, $code, $previous);
+        $this->type = $type;
     }
 
     final public function getType() {
