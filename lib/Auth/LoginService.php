@@ -33,7 +33,14 @@ class LoginService {
                 );
 
                 Util::writeJsonResult($result);
-                return array('userInfo' => $returnData['user_info']);
+
+                return array(
+                    'code' => 0,
+                    'message' => 'ok',
+                    'data' => array(
+                        'userInfo' => $returnData['user_info'],
+                    ),
+                );
 
             } else {
                 throw new Exception("#{$body['returnCode']} - {$body['returnMessage']}");
@@ -42,7 +49,12 @@ class LoginService {
         } catch (Exception $e) {
             $error = new LoginServiceException(Constants::ERR_LOGIN_FAILED, $e->getMessage());
             self::writeError($error);
-            throw $error;
+
+            return array(
+                'code' => -1,
+                'message' => $error->getMessage(),
+                'data' => array(),
+            );
         }
     }
 
@@ -63,7 +75,14 @@ class LoginService {
             switch ($body['returnCode']) {
             case 0:
                 $returnData = $body['returnData'];
-                return array('userInfo' => $returnData['user_info']);
+
+                return array(
+                    'code' => 0,
+                    'message' => 'ok',
+                    'data' => array(
+                        'userInfo' => $returnData['user_info'],
+                    ),
+                );
                 break;
 
             case 60011:
@@ -83,7 +102,12 @@ class LoginService {
             }
 
             self::writeError($error);
-            throw $error;
+
+            return array(
+                'code' => -1,
+                'message' => $error->getMessage(),
+                'data' => array(),
+            );
         }
     }
 
