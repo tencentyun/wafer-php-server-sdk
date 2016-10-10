@@ -111,7 +111,7 @@ class LoginService {
         }
     }
 
-    private static function writeError($err) {
+    private static function writeError(LoginServiceException $err) {
         $result = array();
         $result[Constants::WX_SESSION_MAGIC_ID] = 1;
         $result['error'] = $err->getType();
