@@ -8,7 +8,7 @@ use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class AuthAPI {
-    const APIEndpoint = Conf::AUTH_URL;
+    const APIEndpoint = Conf::AUTH_SERVER_URL;
 
     public static function login($code, $encrypt_data) {
         $param = compact('code', 'encrypt_data');

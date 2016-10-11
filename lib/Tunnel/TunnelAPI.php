@@ -8,7 +8,7 @@ use QCloud_WeApp_SDK\Helper\Request as Request;
 use QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelAPI {
-    const APIEndpoint = Conf::TUNNEL_URL;
+    const APIEndpoint = Conf::TUNNEL_SERVER_URL;
 
     public static function requestConnect($skey, $receiveUrl) {
         $param = compact('skey', 'receiveUrl');
