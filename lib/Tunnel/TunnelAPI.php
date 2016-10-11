@@ -13,6 +13,10 @@ class TunnelAPI {
         return self::sendRequest('/get/wsurl', 'RequestConnect', $param);
     }
 
+    public static function emitMessage($tunnelIds, $type, $content = NULL) {
+
+    }
+
     private static function sendRequest($apiPath, $apiName, $apiParam) {
         $url = Conf::$TunnelServerHost . $apiPath;
         $timeout = 15 * 1000;
@@ -39,6 +43,12 @@ class TunnelAPI {
     }
 
     private static function packReqData($api, $param, $signature = NULL) {
+        $signature = self::signature($api, $param);
         return compact('api', 'param', 'signature');
+    }
+
+    private static function signature($api, $param) {
+        $input = json_encode(compact('api', 'param'));
+        return Signature::compute($input);
     }
 }
