@@ -23,9 +23,9 @@ class Logger {
 
                 if (is_array($message)) {
                     if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-                        $message = json_encode($message, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+                        $message = json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                     } else {
-                        $message = json_encode($message, JSON_FORCE_OBJECT);
+                        $message = json_encode($message);
                     }
                 }
 
