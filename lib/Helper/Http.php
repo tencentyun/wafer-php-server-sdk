@@ -2,21 +2,42 @@
 namespace QCloud_WeApp_SDK\Helper;
 
 class Http {
+    public static function get($options) {
+        $options['method'] = 'GET';
+        return self::send($options);
+    }
+
     public static function jsonPost($options) {
+        if (isset($options['data'])) {
+            $options['data'] = json_encode($options['data']);
+        }
+
+        $options = array_merge_recursive($options, array(
+            'method' => 'POST',
+            'headers' => array('Content-Type: application/json; charset=utf-8'),
+        ));
+
+        return self::send($options);
+    }
+
+    public static function send($options) {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $options['method']);
         curl_setopt($ch, CURLOPT_URL, $options['url']);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+
+        if (isset($options['headers'])) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $options['headers']);
+        }
 
         if (isset($options['timeout'])) {
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $options['timeout']);
         }
 
         if (isset($options['data'])) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($options['data']));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $options['data']);
         }
 
         $result = curl_exec($ch);
