@@ -2,7 +2,7 @@
 namespace QCloud_WeApp_SDK\Helper;
 
 class Logger {
-    const SWITCH_ON = TRUE;
+    const SWITCH_ON = FALSE;
 
     public static function debug($message) {
         if (self::SWITCH_ON !== TRUE) {
