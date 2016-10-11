@@ -1,7 +1,7 @@
 <?php
 namespace QCloud_WeApp_SDK\Helper;
 
-class Http {
+class Request {
     public static function get($options) {
         $options['method'] = 'GET';
         return self::send($options);

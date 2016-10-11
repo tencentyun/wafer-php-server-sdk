@@ -5,7 +5,7 @@ use \Exception as Exception;
 
 use \QCloud_WeApp_SDK\Conf as Conf;
 use \QCloud_WeApp_SDK\Helper\Util as Util;
-use \QCloud_WeApp_SDK\Helper\Http as Http;
+use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class LoginService {
     public static function login() {
@@ -110,7 +110,7 @@ class LoginService {
     }
 
     private static function sendRequest($data) {
-        return Http::jsonPost(array(
+        return Request::jsonPost(array(
             'url' => Conf::AUTH_URL,
             'data' => $data,
             'timeout' => 15 * 1000,
