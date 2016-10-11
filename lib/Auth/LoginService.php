@@ -3,45 +3,32 @@ namespace QCloud_WeApp_SDK\Auth;
 
 use \Exception as Exception;
 
-use \QCloud_WeApp_SDK\Conf as Conf;
 use \QCloud_WeApp_SDK\Helper\Util as Util;
-use \QCloud_WeApp_SDK\Helper\Logger as Logger;
-use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class LoginService {
     public static function login() {
+        $code = Util::getHttpHeader(Constants::WX_HEADER_CODE);
+        $encryptData = Util::getHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA);
+
         try {
-            $data = self::getLoginData();
-            Logger::debug('LoginService::login [data] =>', $data);
+            $loginResult = AuthAPI::login($code, $encryptData);
 
-            list($status, $body) = array_values(self::sendRequest($data));
-            Logger::debug('LoginService::login [result] =>', compact('status', 'body'));
+            $result = array();
+            $result[Constants::WX_SESSION_MAGIC_ID] = 1;
+            $result['session'] = array(
+                'id' => $loginResult['id'],
+                'skey' => $loginResult['skey'],
+            );
 
-            self::checkResult($status, $body);
+            Util::writeJsonResult($result);
 
-            if ($body['returnCode'] === 0) {
-                $returnData = $body['returnData'];
-
-                $result = array();
-                $result[Constants::WX_SESSION_MAGIC_ID] = 1;
-                $result['session'] = array(
-                    'id' => $returnData['id'],
-                    'skey' => $returnData['skey'],
-                );
-
-                Util::writeJsonResult($result);
-
-                return array(
-                    'code' => 0,
-                    'message' => 'ok',
-                    'data' => array(
-                        'userInfo' => $returnData['user_info'],
-                    ),
-                );
-
-            } else {
-                throw new Exception("#{$body['returnCode']} - {$body['returnMessage']}");
-            }
+            return array(
+                'code' => 0,
+                'message' => 'ok',
+                'data' => array(
+                    'userInfo' => $loginResult['user_info'],
+                ),
+            );
 
         } catch (Exception $e) {
             $error = new LoginServiceException(Constants::ERR_LOGIN_FAILED, $e->getMessage());
@@ -56,41 +43,32 @@ class LoginService {
     }
 
     public static function check() {
+        $id = Util::getHttpHeader(Constants::WX_HEADER_ID);
+        $skey = Util::getHttpHeader(Constants::WX_HEADER_SKEY);
+
         try {
-            $data = self::getCheckData();
-            Logger::debug('LoginService::check [data] =>', $data);
+            $checkResult = AuthAPI::checkLogin($id, $skey);
 
-            list($status, $body) = array_values(self::sendRequest($data));
-            Logger::debug('LoginService::check [result] =>', compact('status', 'body'));
-
-            self::checkResult($status, $body);
-
-            switch ($body['returnCode']) {
-            case Constants::RETURN_CODE_SUCCESS:
-                $returnData = $body['returnData'];
-
-                return array(
-                    'code' => 0,
-                    'message' => 'ok',
-                    'data' => array(
-                        'userInfo' => $returnData['user_info'],
-                    ),
-                );
-                break;
-
-            case Constants::RETURN_CODE_SKEY_EXPIRED:
-            case Constants::RETURN_CODE_WX_SESSION_FAILED:
-                throw new LoginServiceException(Constants::ERR_INVALID_SESSION, $body['returnMessage']);
-                break;
-
-            default:
-                throw new Exception("#{$body['returnCode']} - {$body['returnMessage']}");
-                break;
-            }
-
+            return array(
+                'code' => 0,
+                'message' => 'ok',
+                'data' => array(
+                    'userInfo' => $checkResult['user_info'],
+                ),
+            );
         } catch (Exception $e) {
-            if ($e instanceof LoginServiceException) {
-                $error = $e;
+            if ($e instanceof AuthAPIException) {
+                switch ($e->getCode()) {
+                case Constants::RETURN_CODE_SKEY_EXPIRED:
+                case Constants::RETURN_CODE_WX_SESSION_FAILED:
+                    $error = new LoginServiceException(Constants::ERR_INVALID_SESSION, $e->getMessage());
+                    break;
+
+                default:
+                    $message = "#{$body['returnCode']} - {$body['returnMessage']}";
+                    $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $message);
+                    break;
+                }
             } else {
                 $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
             }
@@ -112,52 +90,5 @@ class LoginService {
         $result['message'] = $err->getMessage();
 
         Util::writeJsonResult($result);
-    }
-
-    private static function sendRequest($data) {
-        return Request::jsonPost(array(
-            'url' => Conf::AUTH_URL,
-            'data' => $data,
-            'timeout' => 15 * 1000,
-        ));
-    }
-
-    private static function getLoginData() {
-        $data = array(
-            'code' => Util::getHttpHeader(Constants::WX_HEADER_CODE),
-            'encrypt_data' => Util::getHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA),
-        );
-
-        return self::packReqData(Constants::INTERFACE_LOGIN, $data);
-    }
-
-    private static function getCheckData() {
-        $data = array(
-            'id' => Util::getHttpHeader(Constants::WX_HEADER_ID),
-            'skey' => Util::getHttpHeader(Constants::WX_HEADER_SKEY),
-        );
-
-        return self::packReqData(Constants::INTERFACE_CHECK, $data);
-    }
-
-    private static function packReqData($interfaceName, $data) {
-        return array(
-            'version' => 1,
-            'componentName' => 'MA',
-            'interface' => array(
-                'interfaceName' => $interfaceName,
-                'para' => $data,
-            ),
-        );
-    }
-
-    private static function checkResult($status, $body) {
-        if ($status !== 200) {
-            throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
-        }
-
-        if (!is_array($body)) {
-            throw new Exception('鉴权服务器响应格式错误，无法解析 JSON 字符串');
-        }
     }
 }
