@@ -8,8 +8,6 @@ use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class AuthAPI {
-    const APIEndpoint = Conf::AUTH_SERVER_URL;
-
     public static function login($code, $encrypt_data) {
         $param = compact('code', 'encrypt_data');
         return self::sendRequest(Constants::INTERFACE_LOGIN, $param);
@@ -21,7 +19,7 @@ class AuthAPI {
     }
 
     private static function sendRequest($apiName, $apiParam) {
-        $url = self::APIEndpoint;
+        $url = Conf::$AuthServerHost;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiName, $apiParam);
         Logger::debug('AuthAPI [request data] =>', $data);

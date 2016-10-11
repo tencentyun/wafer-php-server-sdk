@@ -8,7 +8,7 @@ class Signature {
      * 计算签名
      */
     public static function compute($input) {
-        return sha1($input . Conf::SECRET_KEY, FALSE);
+        return sha1($input . Conf::$SecretKey, FALSE);
     }
 
     /**

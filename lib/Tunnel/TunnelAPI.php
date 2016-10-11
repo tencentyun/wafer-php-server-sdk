@@ -8,15 +8,13 @@ use QCloud_WeApp_SDK\Helper\Request as Request;
 use QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelAPI {
-    const APIEndpoint = Conf::TUNNEL_SERVER_URL;
-
     public static function requestConnect($skey, $receiveUrl) {
         $param = compact('skey', 'receiveUrl');
         return self::sendRequest('/get/wsurl', 'RequestConnect', $param);
     }
 
     private static function sendRequest($apiPath, $apiName, $apiParam) {
-        $url = self::APIEndpoint . $apiPath;
+        $url = Conf::$TunnelServerHost . $apiPath;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiName, $apiParam);
         Logger::debug('TunnelAPI [request data] =>', $data);
