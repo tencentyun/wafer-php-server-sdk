@@ -5,14 +5,17 @@ use \Exception as Exception;
 
 use \QCloud_WeApp_SDK\Conf as Conf;
 use \QCloud_WeApp_SDK\Helper\Util as Util;
+use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class LoginService {
     public static function login() {
         try {
             $data = self::getLoginData();
+            Logger::debug('LoginService::login [data] =>', $data);
+
             list($status, $body) = array_values(self::sendRequest($data));
-            // var_export(compact('status', 'body'));
+            Logger::debug('LoginService::login [result] =>', compact('status', 'body'));
 
             self::checkResult($status, $body);
 
@@ -55,8 +58,10 @@ class LoginService {
     public static function check() {
         try {
             $data = self::getCheckData();
+            Logger::debug('LoginService::check [data] =>', $data);
+
             list($status, $body) = array_values(self::sendRequest($data));
-            // var_export(compact('status', 'body'));
+            Logger::debug('LoginService::check [result] =>', compact('status', 'body'));
 
             self::checkResult($status, $body);
 
