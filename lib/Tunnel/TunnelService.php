@@ -60,15 +60,15 @@ class TunnelService {
         if (!is_array($body)) {
             return Util::writeJsonResult(array(
                 'code' => 9001,
-                'message' => 'Bad request - invalid json',
-            ));
+                'message' => 'Bad request - request data is not json',
+            ), 400);
         }
 
         if (!isset($body['data']) || !isset($body['signature'])) {
             return Util::writeJsonResult(array(
                 'code' => 9002,
-                'message' => 'Bad request - invalid data',
-            ));
+                'message' => 'Bad request - invalid request data',
+            ), 400);
         }
 
         // 校验签名
@@ -77,7 +77,7 @@ class TunnelService {
             return Util::writeJsonResult(array(
                 'code' => 9003,
                 'message' => 'Bad request - check signature failed',
-            ));
+            ), 400);
         }
 
         foreach ($body['data'] as $packet) {
