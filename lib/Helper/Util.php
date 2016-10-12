@@ -18,5 +18,7 @@ class Util {
         } else {
             echo json_encode($obj, JSON_FORCE_OBJECT);
         }
+
+        Logger::debug("Util::writeJsonResult => [{$statusCode}]", $obj);
     }
 }
