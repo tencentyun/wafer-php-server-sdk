@@ -22,15 +22,19 @@ class TunnelService {
         case 'POST':
             self::handlePost($handler, $options);
             break;
+
+        default:
+            Util::writeJsonResult(array('code' => 501, 'message' => 'Not Implemented'), 501);
+            break;
         }
     }
 
-    public static function broadcast($tunnelIds, $type, $message) {
-        Logger::debug('TunnelService::broadcast', compact('tunnelIds', 'type', 'message'));
+    public static function broadcast($tunnelIds, $type, $content) {
+        Logger::debug('TunnelService::broadcast =>', compact('tunnelIds', 'type', 'content'));
     }
 
-    public static function emit($tunnelId, $type, $message) {
-        Logger::debug('TunnelService::emit', compact('tunnelId', 'type', 'message'));
+    public static function emit($tunnelId, $type, $content) {
+        Logger::debug('TunnelService::emit =>', compact('tunnelId', 'type', 'content'));
     }
 
     private static function handleGet(ITunnelHandler $handler, $options) {
@@ -53,34 +57,16 @@ class TunnelService {
     }
 
     private static function handlePost(ITunnelHandler $handler, $options) {
-        $contents = file_get_contents('php://input');
-        Logger::debug('TunnelService::handle [post data] =>', $contents);
-
-        $body = json_decode($contents, TRUE);
-        if (!is_array($body)) {
-            return Util::writeJsonResult(array(
-                'code' => 9001,
-                'message' => 'Bad request - request data is not json',
-            ), 400);
+        // $data => array(
+        //  array('tunnelId' => '', 'type' => '', 'content'? => ''),
+        //  array('tunnelId' => '', 'type' => '', 'content'? => ''),
+        //  ...
+        // )
+        if (!($data = self::parsePostPayloadData())) {
+            return;
         }
 
-        if (!isset($body['data']) || !isset($body['signature'])) {
-            return Util::writeJsonResult(array(
-                'code' => 9002,
-                'message' => 'Bad request - invalid request data',
-            ), 400);
-        }
-
-        // 校验签名
-        $input = json_encode($body['data']);
-        if (!Signature::check($input, $body['signature'])) {
-            return Util::writeJsonResult(array(
-                'code' => 9003,
-                'message' => 'Bad request - check signature failed',
-            ), 400);
-        }
-
-        foreach ($body['data'] as $packet) {
+        foreach ($data as $packet) {
             $tunnelId = $packet['tunnelId'];
 
             try {
@@ -89,12 +75,9 @@ class TunnelService {
                     $handler->onConnect($tunnelId);
                     break;
 
-                // TODO: 完善逻辑
                 case 'message':
-                    $content = json_decode($packet['content'], TRUE);
-                    $type = $content['type'];
-                    $message = $content['message'];
-                    $handler->onMessage($tunnelId, $type, $message);
+                    list($type, $content) = self::decodePacketContent($packet);
+                    $handler->onMessage($tunnelId, $type, $content);
                     break;
 
                 case 'close':
@@ -123,5 +106,64 @@ class TunnelService {
         $hostname = Conf::$ServerHost;
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         return "{$scheme}://{$hostname}{$path}";
+    }
+
+    /**
+     * 解析 Post Payload 数据
+     */
+    private static function parsePostPayloadData() {
+        $contents = file_get_contents('php://input');
+        Logger::debug('TunnelService::handle [post payload] =>', $contents);
+
+        $body = json_decode($contents, TRUE);
+        if (!is_array($body)) {
+            Util::writeJsonResult(array(
+                'code' => 9001,
+                'message' => 'Bad request - request data is not json',
+            ), 400);
+            return FALSE;
+        }
+
+        if (!isset($body['data']) || !isset($body['signature'])) {
+            Util::writeJsonResult(array(
+                'code' => 9002,
+                'message' => 'Bad request - invalid request data',
+            ), 400);
+            return FALSE;
+        }
+
+        // 校验签名
+        $input = json_encode($body['data']);
+        if (!Signature::check($input, $body['signature'])) {
+            Util::writeJsonResult(array(
+                'code' => 9003,
+                'message' => 'Bad request - check signature failed',
+            ), 400);
+            return FALSE;
+        }
+
+        return $body['data'];
+    }
+
+    private static function decodePacketContent($packet)  {
+        if (isset($packet['content'])) {
+            $content = json_decode($packet['content'], TRUE);
+
+            if (!is_array($content)) {
+                $content = array();
+            }
+        } else {
+            $content = array();
+        }
+
+        if (!isset($content['type'])) {
+            $content['type'] = 'UnknownRaw';
+        }
+
+        if (!isset($content['content'])) {
+            $content['content'] = $packet['content'];
+        }
+
+        return array($content['type'], $content['content']);;
     }
 }
