@@ -33,7 +33,7 @@ class Request {
         }
 
         if (isset($options['timeout'])) {
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $options['timeout']);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, $options['timeout']);
         }
 
         if (isset($options['data'])) {
