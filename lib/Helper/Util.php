@@ -9,7 +9,11 @@ class Util {
         return isset($_SERVER[$headerKey]) ? $_SERVER[$headerKey] : '';
     }
 
-    public static function writeJsonResult($obj) {
+    public static function writeJsonResult($obj, $statusCode = 200) {
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            http_response_code($statusCode);
+        }
+
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($obj, JSON_FORCE_OBJECT);
     }
