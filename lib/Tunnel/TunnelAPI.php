@@ -41,7 +41,7 @@ class TunnelAPI {
         list($status, $body) = array_values(Request::jsonPost(compact('url', 'timeout', 'data')));
 
         // 记录请求日志
-        Logger::debug("POST {$url}{$apiPath} => [{$status}]", array('[请求]' => $data, '[响应]' => $body));
+        Logger::debug("POST {$url} => [{$status}]", array('[请求]' => $data, '[响应]' => $body));
 
         if ($status !== 200) {
             throw new Exception('请求信道 API 失败，网络异常或信道服务器错误');
