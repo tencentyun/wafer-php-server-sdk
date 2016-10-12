@@ -80,7 +80,7 @@ class TunnelService {
             return;
         }
 
-        Util::writeJsonResult(array('code' => 0, 'message' => 'OK'));
+        Util::writeJsonResult(array('code' => 0, 'message' => 'ok'));
 
         $tunnelId = $packet['tunnelId'];
 
@@ -163,6 +163,7 @@ class TunnelService {
                 $content = array();
             }
         } else {
+            $packet['content'] = '';
             $content = array();
         }
 
