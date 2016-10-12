@@ -16,7 +16,8 @@ class TunnelAPI {
 
     public static function emitMessage($tunnelIds, $messageType, $messageContent) {
         $packetType = 'message';
-        $packetContent = implode(':', array($messageType, json_encode($messageContent)));
+        $encodedContent = json_encode($messageContent, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $packetContent = implode(':', array($messageType, $encodedContent));
         return self::emitPacket($tunnelIds, $packetType, $packetContent);
     }
 
@@ -33,10 +34,11 @@ class TunnelAPI {
         $url = Conf::$TunnelServerHost . $apiPath;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiParam);
-        Logger::debug('TunnelAPI [request data] =>', $data);
 
         list($status, $body) = array_values(Request::jsonPost(compact('url', 'timeout', 'data')));
-        Logger::debug('TunnelAPI [response result]', compact('status', 'body'));
+
+        // 记录请求日志
+        Logger::debug("POST {$url}{$apiPath} => [{$status}]", array('[请求]' => $data, '[响应]' => $body));
 
         if ($status !== 200) {
             throw new Exception('请求信道 API 失败，网络异常或信道服务器错误');
