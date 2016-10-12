@@ -61,7 +61,7 @@ class TunnelService {
             $signature = $body['signature'];
 
             // 校验签名
-            if (!Signature::check(json_encode($data), $signature)) {
+            if (!Signature::check($data, $signature)) {
                 throw new Exception('签名校验失败');
             }
 

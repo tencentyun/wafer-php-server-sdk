@@ -54,7 +54,7 @@ class TunnelAPI {
     }
 
     private static function packReqData($data) {
-        $signature = Signature::compute(json_encode($data));
+        $signature = Signature::compute($data);
         return compact('data', 'signature');
     }
 }
