@@ -1,6 +1,8 @@
 <?php
 namespace QCloud_WeApp_SDK\Tunnel;
 
+use \Exception as Exception;
+
 use \QCloud_WeApp_SDK\Conf as Conf;
 use \QCloud_WeApp_SDK\Auth\LoginService as LoginService;
 use \QCloud_WeApp_SDK\Helper\Util as Util;
@@ -29,12 +31,14 @@ class TunnelService {
         }
     }
 
-    public static function broadcast($tunnelIds, $type, $content) {
-        Logger::debug('TunnelService::broadcast =>', compact('tunnelIds', 'type', 'content'));
+    public static function broadcast($tunnelIds, $messageType, $messageContent) {
+        Logger::debug('TunnelService::broadcast =>', compact('tunnelIds', 'messageType', 'messageContent'));
+        TunnelAPI::emitMessage($tunnelIds, $messageType, $messageContent);
     }
 
-    public static function emit($tunnelId, $type, $content) {
-        Logger::debug('TunnelService::emit =>', compact('tunnelId', 'type', 'content'));
+    public static function emit($tunnelId, $messageType, $messageContent) {
+        Logger::debug('TunnelService::emit =>', compact('tunnelId', 'messageType', 'messageContent'));
+        TunnelAPI::emitMessage(array($tunnelId), $messageType, $messageContent);
     }
 
     private static function handleGet(ITunnelHandler $handler, $options) {
@@ -50,10 +54,24 @@ class TunnelService {
             $userInfo = $result['data']['userInfo'];
         }
 
-        $tunnelInfo = TunnelAPI::requestConnect(Conf::$SecretKey, self::buildReceiveUrl());
-        $handler->onRequest($tunnelInfo['tunnelId'], $userInfo);
+        try {
+            $body = TunnelAPI::requestConnect(Conf::$SecretKey, self::buildReceiveUrl());
 
-        Util::writeJsonResult(array('url' => $tunnelInfo['connectUrl']));
+            $data = $body['data'];
+            $signature = $body['signature'];
+
+            // 校验签名
+            if (!Signature::check(json_encode($data), $signature)) {
+                throw new Exception('签名校验失败');
+            }
+
+        } catch (Exception $e) {
+            Util::writeJsonResult(array('error' => $e->getMessage()));
+            return;
+        }
+
+        Util::writeJsonResult(array('url' => $data['connectUrl']));
+        $handler->onRequest($data['tunnelId'], $userInfo);
     }
 
     private static function handlePost(ITunnelHandler $handler, $options) {

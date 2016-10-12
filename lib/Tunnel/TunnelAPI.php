@@ -10,17 +10,28 @@ use QCloud_WeApp_SDK\Helper\Logger as Logger;
 class TunnelAPI {
     public static function requestConnect($skey, $receiveUrl) {
         $param = compact('skey', 'receiveUrl');
-        return self::sendRequest('/get/wsurl', 'RequestConnect', $param);
+        return self::sendRequest('/get/wsurl', $param);
     }
 
-    public static function emitMessage($tunnelIds, $type, $content = NULL) {
-
+    public static function emitMessage($tunnelIds, $messageType, $messageContent) {
+        $packetType = 'message';
+        $packetContent = implode(':', array($messageType, json_encode($messageContent)));
+        return self::emitPacket($tunnelIds, $packetType, $packetContent);
     }
 
-    private static function sendRequest($apiPath, $apiName, $apiParam) {
+    public static function emitPacket($tunnelIds, $packetType, $packetContent = NULL) {
+        $param = array('tunnelIds' => $tunnelIds, 'type' => $packetType);
+        if ($packetContent) {
+            $param['content'] = $packetContent;
+        }
+
+        return self::sendRequest('/ws/push', $param);
+    }
+
+    private static function sendRequest($apiPath, $apiParam) {
         $url = Conf::$TunnelServerHost . $apiPath;
         $timeout = 15 * 1000;
-        $data = self::packReqData($apiName, $apiParam);
+        $data = self::packReqData($apiParam);
         Logger::debug('TunnelAPI [request data] =>', $data);
 
         list($status, $body) = array_values(Request::jsonPost(compact('url', 'timeout', 'data')));
@@ -35,20 +46,14 @@ class TunnelAPI {
         }
 
         if ($body['code'] !== 0) {
-            throw new Exception("信道服务调用失败：{$body['code']} - {$body['msg']}");
+            throw new TunnelAPIException("信道服务调用失败：{$body['code']} - {$body['msg']}", $body['code']);
         }
 
-        // TODO: 校验签名
-        return $body['data'];
+        return $body;
     }
 
-    private static function packReqData($api, $param, $signature = NULL) {
-        $signature = self::signature($api, $param);
-        return compact('api', 'param', 'signature');
-    }
-
-    private static function signature($api, $param) {
-        $input = json_encode(compact('api', 'param'));
-        return Signature::compute($input);
+    private static function packReqData($data) {
+        $signature = Signature::compute(json_encode($data));
+        return compact('data', 'signature');
     }
 }
