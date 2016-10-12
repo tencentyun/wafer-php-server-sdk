@@ -9,7 +9,8 @@ use QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelAPI {
     public static function requestConnect($skey, $receiveUrl) {
-        $param = compact('skey', 'receiveUrl');
+        $protocolType = 'wss';
+        $param = compact('skey', 'receiveUrl', 'protocolType');
         return self::sendRequest('/get/wsurl', $param);
     }
 
