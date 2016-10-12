@@ -26,7 +26,7 @@ class TunnelAPI {
             $param['content'] = $packetContent;
         }
 
-        return self::sendRequest('/ws/push', $param);
+        return self::sendRequest('/ws/push', array($param));
     }
 
     private static function sendRequest($apiPath, $apiParam) {

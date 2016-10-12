@@ -75,39 +75,31 @@ class TunnelService {
     }
 
     private static function handlePost(ITunnelHandler $handler, $options) {
-        // $data => array(
-        //  array('tunnelId' => '', 'type' => '', 'content'? => ''),
-        //  array('tunnelId' => '', 'type' => '', 'content'? => ''),
-        //  ...
-        // )
-        if (!($data = self::parsePostPayloadData())) {
+        // $packet => array('tunnelId' => '', 'type' => '', 'content'? => '');
+        if (!($packet = self::parsePostPayloadData())) {
             return;
         }
 
-        foreach ($data as $packet) {
-            $tunnelId = $packet['tunnelId'];
-
-            try {
-                switch ($packet['type']) {
-                case 'connect':
-                    $handler->onConnect($tunnelId);
-                    break;
-
-                case 'message':
-                    list($type, $content) = self::decodePacketContent($packet);
-                    $handler->onMessage($tunnelId, $type, $content);
-                    break;
-
-                case 'close':
-                    $handler->onClose($tunnelId);
-                    break;
-                }
-            } catch (Exception $e) {
-                continue;
-            }
-        }
-
         Util::writeJsonResult(array('code' => 0, 'message' => 'OK'));
+
+        $tunnelId = $packet['tunnelId'];
+
+        try {
+            switch ($packet['type']) {
+            case 'connect':
+                $handler->onConnect($tunnelId);
+                break;
+
+            case 'message':
+                list($type, $content) = self::decodePacketContent($packet);
+                $handler->onMessage($tunnelId, $type, $content);
+                break;
+
+            case 'close':
+                $handler->onClose($tunnelId);
+                break;
+            }
+        } catch (Exception $e) {}
     }
 
     /**
