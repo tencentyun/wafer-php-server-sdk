@@ -16,8 +16,11 @@ class TunnelAPI {
 
     public static function emitMessage($tunnelIds, $messageType, $messageContent) {
         $packetType = 'message';
-        $encodedContent = json_encode($messageContent, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $packetContent = implode(':', array($messageType, $encodedContent));
+        $packetContent = json_encode(array(
+            'type' => $messageType,
+            'content' => $messageContent,
+        ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
         return self::emitPacket($tunnelIds, $packetType, $packetContent);
     }
 
