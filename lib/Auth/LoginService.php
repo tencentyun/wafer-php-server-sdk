@@ -95,7 +95,7 @@ class LoginService {
         $headerValue = Util::getHttpHeader($headerKey);
 
         if (!$headerValue) {
-            throw new Exception("请求头未包含 {$headerKey}，请配合客户端 SDK 登陆后再进行请求");
+            throw new Exception("请求头未包含 {$headerKey}，请配合客户端 SDK 登录后再进行请求");
         }
 
         return $headerValue;
