@@ -76,15 +76,15 @@ class TunnelService {
         }
 
         try {
-            $body = TunnelAPI::requestConnect(Conf::$SecretKey, self::buildReceiveUrl());
+            $body = TunnelAPI::requestConnect(Conf::$TunnelSignatureKey, self::buildReceiveUrl());
 
             $data = $body['data'];
             $signature = $body['signature'];
 
-            // 校验签名
-            if (!Signature::check($data, $signature)) {
+            // TODO: 校验签名
+            /*if (!Signature::check($data, $signature)) {
                 throw new Exception('签名校验失败');
-            }
+            }*/
 
         } catch (Exception $e) {
             Util::writeJsonResult(array('error' => $e->getMessage()));
@@ -161,15 +161,15 @@ class TunnelService {
             return FALSE;
         }
 
-        // 校验签名
-        $input = json_encode($body['data']);
+        // TODO: 校验签名
+        /*$input = json_encode($body['data']);
         if (!Signature::check($input, $body['signature'])) {
             Util::writeJsonResult(array(
                 'code' => 9003,
                 'message' => 'Bad request - check signature failed',
             ), 400);
             return FALSE;
-        }
+        }*/
 
         Util::writeJsonResult(array('code' => 0, 'message' => 'ok'));
         return $body['data'];

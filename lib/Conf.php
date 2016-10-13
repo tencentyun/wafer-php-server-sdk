@@ -2,9 +2,6 @@
 namespace QCloud_WeApp_SDK;
 
 class Conf {
-    // SDK 密钥，该密钥需要保密
-    public static $SecretKey;
-
     // 当前使用 SDK 服务器的主机，该主机需要外网可访问
     public static $ServerHost;
 
@@ -14,13 +11,20 @@ class Conf {
     // 信道服务器服务地址
     public static $TunnelServerHost;
 
-    public static function setup() {
-        self::$SecretKey = 'eeb93ecd-ecb3-4c58-a347-8ce3617b8e8c';
-        self::$ServerHost = 'www.qcloua.la';
-        self::$AuthServerHost = 'http://mina.auth.com:7575';
-        self::$TunnelServerHost = 'https://ws.qcloud.com';
+    // 信道服务签名密钥，该密钥需要保密
+    public static $TunnelSignatureKey;
+
+    public static function setup($config) {
+        if (!is_array($config)) {
+            return;
+        }
+
+        $class = get_class();
+
+        foreach ($config as $key => $value) {
+            if (property_exists($class, $key) && is_string($value)) {
+                self::$$key = $value;
+            }
+        }
     }
 }
-
-// TODO: 从配置文件读取
-Conf::setup();
