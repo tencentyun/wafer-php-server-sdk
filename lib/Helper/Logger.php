@@ -2,10 +2,8 @@
 namespace QCloud_WeApp_SDK\Helper;
 
 class Logger {
-    const SWITCH_ON = FALSE;
-
     public static function debug(/* $message1 [, $...] */) {
-        if (self::SWITCH_ON !== TRUE) {
+        if (getenv('DEBUG_SDK') !== 'yes') {
             return;
         }
 
