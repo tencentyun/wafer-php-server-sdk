@@ -52,7 +52,7 @@ class TunnelAPI {
         }
 
         if ($body['code'] !== 0) {
-            throw new TunnelAPIException("信道服务调用失败：{$body['code']} - {$body['msg']}", $body['code']);
+            throw new TunnelAPIException("信道服务调用失败：{$body['code']} - {$body['message']}", $body['code']);
         }
 
         return $body;

@@ -31,14 +31,35 @@ class TunnelService {
         }
     }
 
+    /**
+     * 广播消息到多个信道
+     * @param  Array $tunnelIds       信道IDs
+     * @param  String $messageType    消息类型
+     * @param  String $messageContent 消息内容
+     */
     public static function broadcast($tunnelIds, $messageType, $messageContent) {
-        Logger::debug('TunnelService::broadcast =>', compact('tunnelIds', 'messageType', 'messageContent'));
+        Logger::debug('TunnelService [broadcast] =>', compact('tunnelIds', 'messageType', 'messageContent'));
         TunnelAPI::emitMessage($tunnelIds, $messageType, $messageContent);
     }
 
+    /**
+     * 发送消息到指定信道
+     * @param  String $tunnelId       信道ID
+     * @param  String $messageType    消息类型
+     * @param  String $messageContent 消息内容
+     */
     public static function emit($tunnelId, $messageType, $messageContent) {
-        Logger::debug('TunnelService::emit =>', compact('tunnelId', 'messageType', 'messageContent'));
+        Logger::debug('TunnelService [emit] =>', compact('tunnelId', 'messageType', 'messageContent'));
         TunnelAPI::emitMessage(array($tunnelId), $messageType, $messageContent);
+    }
+
+    /**
+     * 关闭指定信道
+     * @param  String $tunnelId 信道ID
+     */
+    public static function closeTunnel($tunnelId) {
+        Logger::debug('TunnelService [closeTunnel] =>', compact('tunnelId'));
+        TunnelAPI::emitPacket(array($tunnelId), 'close');
     }
 
     private static function handleGet(ITunnelHandler $handler, $options) {
@@ -79,8 +100,6 @@ class TunnelService {
         if (!($packet = self::parsePostPayloadData())) {
             return;
         }
-
-        Util::writeJsonResult(array('code' => 0, 'message' => 'ok'));
 
         $tunnelId = $packet['tunnelId'];
 
@@ -152,6 +171,7 @@ class TunnelService {
             return FALSE;
         }
 
+        Util::writeJsonResult(array('code' => 0, 'message' => 'ok'));
         return $body['data'];
     }
 
