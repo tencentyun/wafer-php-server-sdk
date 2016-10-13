@@ -6,10 +6,10 @@ class Conf {
     public static $ServerHost;
 
     // 鉴权服务器服务地址
-    public static $AuthServerHost;
+    public static $AuthServerUrl;
 
     // 信道服务器服务地址
-    public static $TunnelServerHost;
+    public static $TunnelServerUrl;
 
     // 信道服务签名密钥，该密钥需要保密
     public static $TunnelSignatureKey;

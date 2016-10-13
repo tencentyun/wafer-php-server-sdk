@@ -34,7 +34,7 @@ class TunnelAPI {
     }
 
     private static function sendRequest($apiPath, $apiParam) {
-        $url = Conf::$TunnelServerHost . $apiPath;
+        $url = Conf::$TunnelServerUrl . $apiPath;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiParam);
 

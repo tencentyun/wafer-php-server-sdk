@@ -19,7 +19,7 @@ class AuthAPI {
     }
 
     private static function sendRequest($apiName, $apiParam) {
-        $url = Conf::$AuthServerHost;
+        $url = Conf::$AuthServerUrl;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiName, $apiParam);
 

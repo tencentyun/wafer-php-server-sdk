@@ -131,7 +131,7 @@ class TunnelService {
      *   4. 拼接推送地址为 https://109447.qcloud.la/tunnel
      */
     private static function buildReceiveUrl() {
-        $scheme = parse_url(Conf::$TunnelServerHost, PHP_URL_SCHEME);
+        $scheme = parse_url(Conf::$TunnelServerUrl, PHP_URL_SCHEME);
         $hostname = Conf::$ServerHost;
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         return "{$scheme}://{$hostname}{$path}";
