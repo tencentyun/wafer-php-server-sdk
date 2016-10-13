@@ -7,10 +7,10 @@ use \QCloud_WeApp_SDK\Helper\Util as Util;
 
 class LoginService {
     public static function login() {
-        $code = Util::getHttpHeader(Constants::WX_HEADER_CODE);
-        $encryptData = Util::getHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA);
-
         try {
+            $code = self::getHttpHeader(Constants::WX_HEADER_CODE);
+            $encryptData = self::getHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA);
+
             $loginResult = AuthAPI::login($code, $encryptData);
 
             $result = array();
@@ -43,10 +43,10 @@ class LoginService {
     }
 
     public static function check() {
-        $id = Util::getHttpHeader(Constants::WX_HEADER_ID);
-        $skey = Util::getHttpHeader(Constants::WX_HEADER_SKEY);
-
         try {
+            $id = self::getHttpHeader(Constants::WX_HEADER_ID);
+            $skey = self::getHttpHeader(Constants::WX_HEADER_SKEY);
+
             $checkResult = AuthAPI::checkLogin($id, $skey);
 
             return array(
@@ -89,5 +89,15 @@ class LoginService {
         $result['message'] = $err->getMessage();
 
         Util::writeJsonResult($result);
+    }
+
+    private static function getHttpHeader($headerKey) {
+        $headerValue = Util::getHttpHeader($headerKey);
+
+        if (!$headerValue) {
+            throw new Exception("请求头不包含 {$headerKey}，请配合客户端 SDK 登陆后再进行请求");
+        }
+
+        return $headerValue;
     }
 }
