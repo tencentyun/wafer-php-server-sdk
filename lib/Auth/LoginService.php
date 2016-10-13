@@ -65,8 +65,7 @@ class LoginService {
                     break;
 
                 default:
-                    $message = "#{$body['returnCode']} - {$body['returnMessage']}";
-                    $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $message);
+                    $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
                     break;
                 }
             } else {
