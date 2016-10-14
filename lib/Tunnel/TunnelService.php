@@ -39,7 +39,12 @@ class TunnelService {
      */
     public static function broadcast($tunnelIds, $messageType, $messageContent) {
         Logger::debug('TunnelService [broadcast] =>', compact('tunnelIds', 'messageType', 'messageContent'));
-        TunnelAPI::emitMessage($tunnelIds, $messageType, $messageContent);
+
+        try {
+            return TunnelAPI::emitMessage($tunnelIds, $messageType, $messageContent);
+        } catch (Exception $e) {
+            return array('code' => $e->getCode(), 'message' => $e->getMessage());
+        }
     }
 
     /**
@@ -50,7 +55,12 @@ class TunnelService {
      */
     public static function emit($tunnelId, $messageType, $messageContent) {
         Logger::debug('TunnelService [emit] =>', compact('tunnelId', 'messageType', 'messageContent'));
-        TunnelAPI::emitMessage(array($tunnelId), $messageType, $messageContent);
+
+        try {
+            return TunnelAPI::emitMessage(array($tunnelId), $messageType, $messageContent);
+        } catch (Exception $e) {
+            return array('code' => $e->getCode(), 'message' => $e->getMessage());
+        }
     }
 
     /**
@@ -59,7 +69,12 @@ class TunnelService {
      */
     public static function closeTunnel($tunnelId) {
         Logger::debug('TunnelService [closeTunnel] =>', compact('tunnelId'));
-        TunnelAPI::emitPacket(array($tunnelId), 'close');
+
+        try {
+            return TunnelAPI::emitPacket(array($tunnelId), 'close');
+        } catch (Exception $e) {
+            return array('code' => $e->getCode(), 'message' => $e->getMessage());
+        }
     }
 
     private static function handleGet(ITunnelHandler $handler, $options) {

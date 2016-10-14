@@ -50,11 +50,11 @@ class TunnelAPI {
         ));
 
         if ($status !== 200) {
-            throw new Exception('请求信道 API 失败，网络异常或信道服务器错误');
+            throw new Exception('请求信道 API 失败，网络异常或信道服务器错误', -500);
         }
 
         if (!is_array($body)) {
-            throw new Exception('信道服务器响应格式错误，无法解析 JSON 字符串');
+            throw new Exception('信道服务器响应格式错误，无法解析 JSON 字符串', -400);
         }
 
         if ($body['code'] !== 0) {
