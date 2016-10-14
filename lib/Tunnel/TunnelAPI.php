@@ -8,10 +8,10 @@ use QCloud_WeApp_SDK\Helper\Request as Request;
 use QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelAPI {
-    public static function requestConnect($skey, $receiveUrl) {
+    public static function requestConnect($receiveUrl) {
         $protocolType = 'wss';
-        $param = compact('skey', 'receiveUrl', 'protocolType');
-        return self::sendRequest('/get/wsurl', $param);
+        $param = compact('receiveUrl', 'protocolType');
+        return self::sendRequest('/get/wsurl', $param, TRUE);
     }
 
     public static function emitMessage($tunnelIds, $messageType, $messageContent) {
@@ -30,18 +30,24 @@ class TunnelAPI {
             $param['content'] = $packetContent;
         }
 
-        return self::sendRequest('/ws/push', array($param));
+        return self::sendRequest('/ws/push', array($param), FALSE);
     }
 
-    private static function sendRequest($apiPath, $apiParam) {
+    private static function sendRequest($apiPath, $apiParam, $withTcKey = FALSE) {
         $url = Conf::$TunnelServerUrl . $apiPath;
         $timeout = 15 * 1000;
-        $data = self::packReqData($apiParam);
+        $data = self::packReqData($apiParam, $withTcKey);
 
+        $begin = round(microtime(TRUE) * 1000);
         list($status, $body) = array_values(Request::jsonPost(compact('url', 'timeout', 'data')));
+        $end = round(microtime(TRUE) * 1000);
 
         // 记录请求日志
-        Logger::debug("POST {$url} => [{$status}]", array('[请求]' => $data, '[响应]' => $body));
+        Logger::debug("POST {$url} => [{$status}]", array(
+            '[请求]' => $data,
+            '[响应]' => $body,
+            '[耗时]' => sprintf('%sms', $end - $begin),
+        ));
 
         if ($status !== 200) {
             throw new Exception('请求信道 API 失败，网络异常或信道服务器错误');
@@ -58,8 +64,16 @@ class TunnelAPI {
         return $body;
     }
 
-    private static function packReqData($data) {
-        $signature = Signature::compute($data);
-        return compact('data', 'signature');
+    private static function packReqData($data, $withTcKey = FALSE) {
+        $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $tcId = md5(Conf::$ServerHost);
+        $result = compact('data', 'tcId');
+
+        if ($withTcKey) {
+            $result['tcKey'] = Conf::$TunnelSignatureKey;
+        }
+
+        $result['signature'] = Signature::compute($data);
+        return $result;
     }
 }

@@ -76,16 +76,17 @@ class TunnelService {
         }
 
         try {
-            $body = TunnelAPI::requestConnect(Conf::$TunnelSignatureKey, self::buildReceiveUrl());
+            $body = TunnelAPI::requestConnect(self::buildReceiveUrl());
 
             $data = $body['data'];
             $signature = $body['signature'];
 
-            // TODO: 校验签名
-            /*if (!Signature::check($data, $signature)) {
+            // 校验签名
+            if (!Signature::check($data, $signature)) {
                 throw new Exception('签名校验失败');
-            }*/
+            }
 
+            $data = json_decode($data, TRUE);
         } catch (Exception $e) {
             Util::writeJsonResult(array('error' => $e->getMessage()));
             return;
@@ -142,9 +143,9 @@ class TunnelService {
      */
     private static function parsePostPayloadData() {
         $contents = file_get_contents('php://input');
-        Logger::debug('TunnelService::handle [post payload] =>', $contents);
-
         $body = json_decode($contents, TRUE);
+        Logger::debug('TunnelService::handle [post payload] =>', $body ? $body : $contents);
+
         if (!is_array($body)) {
             Util::writeJsonResult(array(
                 'code' => 9001,
@@ -161,18 +162,26 @@ class TunnelService {
             return FALSE;
         }
 
-        // TODO: 校验签名
-        /*$input = json_encode($body['data']);
-        if (!Signature::check($input, $body['signature'])) {
+        // 校验签名
+        if (!Signature::check($body['data'], $body['signature'])) {
             Util::writeJsonResult(array(
                 'code' => 9003,
                 'message' => 'Bad request - check signature failed',
             ), 400);
             return FALSE;
-        }*/
+        }
+
+        $data = json_decode($body['data'], TRUE);
+        if (!is_array($data)) {
+            Util::writeJsonResult(array(
+                'code' => 9004,
+                'message' => 'Bad request - parse data failed',
+            ), 400);
+            return FALSE;
+        }
 
         Util::writeJsonResult(array('code' => 0, 'message' => 'ok'));
-        return $body['data'];
+        return $data;
     }
 
     private static function decodePacketContent($packet)  {
