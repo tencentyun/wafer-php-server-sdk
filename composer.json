@@ -1,0 +1,15 @@
+{
+    "name": "qcloud/weapp-sdk",
+    "keywords": ["qcloud", "sdk", "weapp"],
+    "homepage": "https://www.qcloud.com/",
+    "license": "MIT",
+    "description": "php sdk for qcloud weapp server",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lib\\": "QCloud_WeApp_SDK"
+        }
+    }
+}
