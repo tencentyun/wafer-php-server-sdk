@@ -4,8 +4,8 @@ namespace QCloud_WeApp_SDK\Tunnel;
 use \Exception as Exception;
 
 use \QCloud_WeApp_SDK\Conf as Conf;
-use QCloud_WeApp_SDK\Helper\Request as Request;
-use QCloud_WeApp_SDK\Helper\Logger as Logger;
+use \QCloud_WeApp_SDK\Helper\Request as Request;
+use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelAPI {
     public static function requestConnect($receiveUrl) {
