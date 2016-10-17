@@ -5,7 +5,13 @@
     "keywords": ["qcloud", "sdk", "weapp"],
     "homepage": "https://www.qcloud.com/",
     "license": "MIT",
-    "authors": ["CFETeam"],
+    "authors": [
+        {
+            "name": "miusuncle",
+            "email": "miusuncle@gmail.com",
+            "homepage": "http://miusuncle.github.io/"
+        }
+    ],
     "require": {
         "php": ">=5.4.0"
     },
