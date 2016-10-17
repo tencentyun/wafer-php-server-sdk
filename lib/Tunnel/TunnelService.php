@@ -78,6 +78,7 @@ class TunnelService {
     }
 
     private static function handleGet(ITunnelHandler $handler, $options) {
+        $tunnelId = '';
         $userInfo = NULL;
 
         if ($options['checkLogin']) {
@@ -102,13 +103,16 @@ class TunnelService {
             }
 
             $data = json_decode($data, TRUE);
+            $tunnelId = $data['tunnelId'];
         } catch (Exception $e) {
             Util::writeJsonResult(array('error' => $e->getMessage()));
             return;
         }
 
         Util::writeJsonResult(array('url' => $data['connectUrl']));
-        $handler->onRequest($data['tunnelId'], $userInfo);
+
+        Logger::debug('ITunnelHandler [onRequest] =>', compact('tunnelId', 'userInfo'));
+        $handler->onRequest($tunnelId, $userInfo);
     }
 
     private static function handlePost(ITunnelHandler $handler, $options) {
@@ -122,15 +126,19 @@ class TunnelService {
         try {
             switch ($packet['type']) {
             case 'connect':
+                Logger::debug('ITunnelHandler [onConnect] =>', compact('tunnelId'));
                 $handler->onConnect($tunnelId);
                 break;
 
             case 'message':
                 list($type, $content) = self::decodePacketContent($packet);
+
+                Logger::debug('ITunnelHandler [onMessage] =>', compact('tunnelId', 'type', 'content'));
                 $handler->onMessage($tunnelId, $type, $content);
                 break;
 
             case 'close':
+                Logger::debug('ITunnelHandler [onClose] =>', compact('tunnelId'));
                 $handler->onClose($tunnelId);
                 break;
             }
