@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-4": {
-            "lib\\": "QCloud_WeApp_SDK"
+            "QCloud_WeApp_SDK\\": "lib"
         }
     }
 }
