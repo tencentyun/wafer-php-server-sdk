@@ -11,7 +11,7 @@ class Signature {
         if (is_array($input)) {
             $input = json_encode($input, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
-        return sha1($input . Conf::$TunnelSignatureKey, FALSE);
+        return sha1($input . Conf::getTunnelSignatureKey(), FALSE);
     }
 
     /**

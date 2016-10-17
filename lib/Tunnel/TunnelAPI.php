@@ -34,7 +34,7 @@ class TunnelAPI {
     }
 
     private static function sendRequest($apiPath, $apiParam, $withTcKey = FALSE) {
-        $url = Conf::$TunnelServerUrl . $apiPath;
+        $url = Conf::getTunnelServerUrl() . $apiPath;
         $timeout = 15 * 1000;
         $data = self::packReqData($apiParam, $withTcKey);
 
@@ -66,11 +66,11 @@ class TunnelAPI {
 
     private static function packReqData($data, $withTcKey = FALSE) {
         $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $tcId = md5(Conf::$ServerHost);
+        $tcId = md5(Conf::getServerHost());
         $result = compact('data', 'tcId');
 
         if ($withTcKey) {
-            $result['tcKey'] = Conf::$TunnelSignatureKey;
+            $result['tcKey'] = Conf::getTunnelSignatureKey();
         }
 
         $result['signature'] = Signature::compute($data);
