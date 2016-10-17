@@ -48,7 +48,6 @@ class Conf {
             }
         }
 
-
         throw new Exception("Call to undefined method {$class}::{$name}()", 1);
     }
 
