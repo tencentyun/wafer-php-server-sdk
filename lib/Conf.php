@@ -2,7 +2,7 @@
 namespace QCloud_WeApp_SDK;
 
 class Conf {
-    //  SDK 日志输出目录
+    // SDK 日志输出目录
     private static $LogPath = '';
 
     // SDK 日志输出级别
