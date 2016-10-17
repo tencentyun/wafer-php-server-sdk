@@ -23,10 +23,16 @@ class AuthAPI {
         $timeout = 15 * 1000;
         $data = self::packReqData($apiName, $apiParam);
 
+        $begin = round(microtime(TRUE) * 1000);
         list($status, $body) = array_values(Request::jsonPost(compact('url', 'timeout', 'data')));
+        $end = round(microtime(TRUE) * 1000);
 
         // 记录请求日志
-        Logger::debug("POST {$url}} => [{$status}]", array('[请求]' => $data, '[响应]' => $body));
+        Logger::debug("POST {$url}} => [{$status}]", array(
+            '[请求]' => $data,
+            '[响应]' => $body,
+            '[耗时]' => sprintf('%sms', $end - $begin),
+        ));
 
         if ($status !== 200) {
             throw new Exception('请求鉴权 API 失败，网络异常或鉴权服务器错误');
