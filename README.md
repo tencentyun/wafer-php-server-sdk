@@ -24,7 +24,7 @@
 
 - 方法一（推荐）：使用 PHP 包依赖管理工具 `composer` 执行以下命令安装
 
-```
+```sh
 composer require qcloud/weapp-sdk
 ```
 
@@ -148,7 +148,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 ### API
 
-**Conf::setServerHost(string $serverHost)**
+#### Conf::setServerHost(string $serverHost)
 
 该静态方法用于设置使用本 SDK 的业务服务器的主机名，如`www.qcloud.la`，该主机需要外网可访问。
 
@@ -156,7 +156,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 - `$serverHost`: 业务服务器的主机名
 
-**Conf::setAuthServerUrl(string $authServerUrl)**
+#### Conf::setAuthServerUrl(string $authServerUrl)
 
 该静态方法用于指定鉴权服务器服务地址，如`http://mina.auth.com`。
 
@@ -164,7 +164,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 - `$authServerUrl`: 鉴权服务器服务地址
 
-**Conf::setTunnelServerUrl(string $tunnelServerUrl)**
+#### Conf::setTunnelServerUrl(string $tunnelServerUrl)
 
 该静态方法用于指定信道服务器服务地址，如`https://ws.qcloud.com`。
 
@@ -172,7 +172,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 - `$tunnelServerUrl`: 信道服务器服务地址
 
-**Conf::setTunnelSignatureKey(string $tunnelSignatureKey)**
+#### Conf::setTunnelSignatureKey(string $tunnelSignatureKey)
 
 该静态方法用于指定和信道服务通信的签名密钥，如`27fb7d1c161b7ca52d73cce0f1d833f9f5b5ec89`，该密钥需要保密。
 
@@ -180,7 +180,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 - `$tunnelSignatureKey`: 通信签名密钥
 
-**Conf::setup(array $config)**
+#### Conf::setup(array $config)
 
 可以使用本方法批量设置以上所有配置。
 
@@ -200,7 +200,7 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 ### API
 
-**LoginService::login()**
+#### LoginService::login()
 
 该静态方法用于处理用户登录。
 
@@ -227,7 +227,7 @@ array(
 )
 ```
 
-**LoginService::check()**
+#### LoginService::check()
 
 该静态方法用于校验登录态。
 
@@ -262,7 +262,7 @@ array(
 
 ### API
 
-**ITunnelHandler**
+#### ITunnelHandler
 
 处理信道请求需实现该接口，接口定义和描述如下：
 
@@ -309,7 +309,7 @@ interface ITunnelHandler {
 }
 ```
 
-**TunnelService::handle(ITunnelHandler $handler[, array $options])**
+#### TunnelService::handle(ITunnelHandler $handler[, array $options])
 
 该静态方法用于处理信道请求。
 
@@ -321,7 +321,7 @@ interface ITunnelHandler {
 
 > 当`checkLogin`为`FALSE`时，传递给`ITunnelHandler->onRequest`的参数 `$userInfo` 值为`NULL`
 
-**TunnelService::broadcast(array $tunnelIds, string $messageType, mixed $messageContent)**
+#### TunnelService::broadcast(array $tunnelIds, string $messageType, mixed $messageContent)
 
 该静态方法用于广播消息到多个信道。
 
@@ -331,7 +331,7 @@ interface ITunnelHandler {
 - `$messageType`: 要广播消息的消息类型（必填）
 - `$messageContent`: 要广播消息的消息内容（必填）
 
-**TunnelService::emit(string $tunnelId, string $messageType, mixed $messageContent)**
+#### TunnelService::emit(string $tunnelId, string $messageType, mixed $messageContent)
 
 该静态方法用于发送消息到指定信道。
 
@@ -341,7 +341,7 @@ interface ITunnelHandler {
 - `$messageType`: 要发送消息的消息类型（必填）
 - `$messageContent`: 要发送消息的消息内容（必填）
 
-**TunnelService::closeTunnel(string $tunnelId)**
+#### TunnelService::closeTunnel(string $tunnelId)
 
 该静态方法用于关闭指定信道。
 
