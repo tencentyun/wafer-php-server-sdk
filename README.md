@@ -258,7 +258,7 @@ array(
 
 ### API
 
-- ITunnelHandler
+**ITunnelHandler**
 
 处理信道请求需实现该接口，接口定义和描述如下：
 
