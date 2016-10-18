@@ -59,7 +59,7 @@ Config::setup(array(
 
 ### 样例 1：使用 `LoginService::login()` 处理用户登录
 
-需要指定单独的路由处理用户登录，如 `https://www.qcloud.la/login`
+处理用户登录需要指定单独的路由，如 `https://www.qcloud.la/login`
 
 ```php
 use \QCloud_WeApp_SDK\Auth\LoginService;
@@ -91,7 +91,7 @@ if ($result['code'] !== 0) {
 
 ### 样例 3：使用 `TunnelService::handle()` 处理信道请求
 
-需要指定单独的路由处理信道请求，如 `https://www.qcloud.la/tunnel`
+处理信道请求需要指定单独的路由，如 `https://www.qcloud.la/tunnel`
 
 ```php
 use \QCloud_WeApp_SDK\Tunnel\TunnelService;
