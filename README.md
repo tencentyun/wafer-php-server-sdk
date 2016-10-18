@@ -22,9 +22,13 @@
 
 ## 安装
 
+- 方法一（推荐）：使用 PHP 包依赖管理工具 `composer` 执行以下命令安装
+
 ```
 composer require qcloud/weapp-sdk
 ```
+
+- 方法二： 直接下载本仓库 `ZIP` 包解压到项目目录中
 
 ## 使用示例
 
