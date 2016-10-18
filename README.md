@@ -34,12 +34,9 @@ composer require qcloud/weapp-sdk
 
 ## 使用示例
 
-```php
-/*----------------------------------------------------------------
- * 加载 SDK
- *----------------------------------------------------------------
- */
+### 加载 SDK
 
+```php
 // 方法一：使用 composer 加载
 require_once 'path/to/vendor/autoload.php';
 
@@ -47,12 +44,9 @@ require_once 'path/to/vendor/autoload.php';
 require_once 'path/to/qcloud/weapp-sdk/AutoLoader.php';
 ```
 
-```php
-/*----------------------------------------------------------------
- * 初始化 SDK 配置项
- *----------------------------------------------------------------
- */
+### 初始化 SDK 配置项
 
+```php
 use \QCloud_WeApp_SDK\Conf;
 
 Config::setup(array(
@@ -63,15 +57,11 @@ Config::setup(array(
 ));
 ```
 
-```php
-/*----------------------------------------------------------------
- * 样例 1
- *----------------------------------------------------------------
- * 使用 `LoginService::login()` 处理用户登录
- * 需要指定单独的路由处理用户登录，如`https://www.qcloud.la/login`
- *----------------------------------------------------------------
- */
+### 样例 1：使用 `LoginService::login()` 处理用户登录
 
+需要指定单独的路由处理用户登录，如 `https://www.qcloud.la/login`
+
+```php
 use \QCloud_WeApp_SDK\Auth\LoginService;
 
 $result = LoginService::login();
@@ -83,14 +73,9 @@ if ($result['code'] === 0) {
 }
 ```
 
-```php
-/*----------------------------------------------------------------
- * 样例 2
- *----------------------------------------------------------------
- * 使用 `LoginService::check()` 处理业务 cgi 请求时校验登录态
- *----------------------------------------------------------------
- */
+### 样例 2：使用 `LoginService::check()` 处理业务 cgi 请求时校验登录态
 
+```php
 use \QCloud_WeApp_SDK\Auth\LoginService;
 
 $result = LoginService::check();
@@ -104,15 +89,11 @@ if ($result['code'] !== 0) {
 // ...
 ```
 
-```php
-/*----------------------------------------------------------------
- * 样例 3
- *----------------------------------------------------------------
- * 使用 `TunnelService::handle()` 处理信道请求
- * 需要指定单独的路由处理信道请求，如`https://www.qcloud.la/tunnel`
- *----------------------------------------------------------------
- */
+### 样例 3：使用 `TunnelService::handle()` 处理信道请求
 
+需要指定单独的路由处理信道请求，如 `https://www.qcloud.la/tunnel`
+
+```php
 use \QCloud_WeApp_SDK\Tunnel\TunnelService;
 use \QCloud_WeApp_SDK\Tunnel\ITunnelHandler;
 
@@ -359,7 +340,7 @@ interface ITunnelHandler {
 
 `void`
 
-> 当 `checkLogin` 为 `FALSE` 时，传递给 `ITunnelHandler->onRequest` 的参数 `$userInfo` 值为 `NULL`
+> 当 `checkLogin` 为 `FALSE` 时，传递给 `ITunnelHandler->onRequest` 的参数 `$userInfo` 值为 `NULL`。
 
 #### TunnelService::broadcast(array $tunnelIds, string $messageType, mixed $messageContent)
 
