@@ -108,6 +108,10 @@ $handler = new TunnelHandler();
 TunnelService::handle($handler, array('checkLogin' => TRUE));
 ```
 
+### 详细示例
+
+参见项目：[腾讯云微信小程序服务端 DEMO - PHP](https://github.com/CFETeam/qcloud-weapp-server-demo-php)
+
 ## API
 
 参见文档 [API.md](./API.md)
