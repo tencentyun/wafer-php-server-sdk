@@ -52,7 +52,7 @@
 
 #### Conf::setTunnelSignatureKey(string $tunnelSignatureKey)
 
-该静态方法用于指定和信道服务通信的签名密钥，如 `27fb7d1c161b7ca52d73cce0f1d833f9f5b5ec89` ，该密钥需要保密。
+该静态方法用于指定和信道服务器通信的签名密钥，如 `9f338d1f0ecc37d25ac7b161c1d7bf72` ，该密钥需要保密。
 
 ##### 参数
 
