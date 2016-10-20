@@ -20,7 +20,7 @@ class AuthAPI {
 
     private static function sendRequest($apiName, $apiParam) {
         $url = Conf::getAuthServerUrl();
-        $timeout = 15 * 1000;
+        $timeout = Conf::getNetworkTimeout();
         $data = self::packReqData($apiName, $apiParam);
 
         $begin = round(microtime(TRUE) * 1000);

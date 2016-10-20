@@ -1,6 +1,8 @@
 <?php
 namespace QCloud_WeApp_SDK;
 
+use \Exception as Exception;
+
 class Conf {
     // SDK 日志输出目录
     private static $LogPath = '';
@@ -20,8 +22,11 @@ class Conf {
     // 信道服务器服务地址
     private static $TunnelServerUrl = '';
 
-    // 信道服务签名密钥，该密钥需要保密
+    // 和信道服务器通信的签名密钥，该密钥需要保密
     private static $TunnelSignatureKey = '';
+
+    // 网络请求超时时长（单位：毫秒）
+    private static $NetworkTimeout = 15000;
 
     public static function __callStatic($name, $arguemnts) {
         $class = get_class();
@@ -30,7 +35,17 @@ class Conf {
             $key = preg_replace('/^get/', '', $name);
 
             if (property_exists($class, $key)) {
-                return self::$$key;
+                $value = self::$$key;
+
+                if (strpos('Log', $key) === 0) {
+                    return $value;
+                }
+
+                if (is_string($value) && !$value) {
+                    throw new Exception("`{$key}`不能为空，请确保 SDK 配置已正确初始化", 1);
+                }
+
+                return $value;
             }
         }
 
