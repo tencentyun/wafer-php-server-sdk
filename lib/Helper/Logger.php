@@ -35,6 +35,12 @@ class Logger {
     protected $_levels = array('ERROR' => 1, 'DEBUG' => 2, 'INFO' => 3, 'ALL' => 4);
 
     protected function __construct() {
+        // do nothing if output log is disabled
+        if (!Conf::getEnableOutputLog()) {
+            $this->_enabled = FALSE;
+            return;
+        }
+
         $this->_log_path = Conf::getLogPath();
         $this->_threshold = Conf::getLogThreshold();
         $this->_threshold_array = Conf::getLogThresholdArray();

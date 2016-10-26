@@ -4,6 +4,9 @@ namespace QCloud_WeApp_SDK;
 use \Exception as Exception;
 
 class Conf {
+    // 是否输出 SDK 日志
+    private static $EnableOutputLog = FALSE;
+
     // SDK 日志输出目录
     private static $LogPath = '';
 
@@ -37,7 +40,7 @@ class Conf {
             if (property_exists($class, $key)) {
                 $value = self::$$key;
 
-                if (strpos('Log', $key) === 0) {
+                if (strpos($key, 'Log') === 0) {
                     return $value;
                 }
 
