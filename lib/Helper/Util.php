@@ -14,12 +14,8 @@ class Util {
     public static function writeJsonResult($obj, $statusCode = 200) {
         header('Content-type: application/json; charset=utf-8');
 
-        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            http_response_code($statusCode);
-            echo json_encode($obj, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($obj, JSON_FORCE_OBJECT);
-        }
+        http_response_code($statusCode);
+        echo json_encode($obj, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
 
         Logger::debug("Util::writeJsonResult => [{$statusCode}]", $obj);
     }

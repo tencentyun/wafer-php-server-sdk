@@ -2,6 +2,9 @@
 namespace QCloud_WeApp_SDK\Helper;
 
 class Request {
+    /**
+     * @codeCoverageIgnore
+     */
     public static function get($options) {
         $options['method'] = 'GET';
         return self::send($options);

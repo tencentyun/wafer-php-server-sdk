@@ -3,6 +3,9 @@ namespace QCloud_WeApp_SDK\Helper;
 
 use \QCloud_WeApp_SDK\Conf as Conf;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Logger {
     // Singleton instance
     protected static $instance = NULL;
@@ -82,11 +85,7 @@ class Logger {
             $message = $messages[$i];
 
             if (is_array($message)) {
-                if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-                    $message = json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                } else {
-                    $message = json_encode($message);
-                }
+                $message = json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
             if (is_string($message) || is_numeric($message)) {
