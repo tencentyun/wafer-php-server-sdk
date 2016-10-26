@@ -99,7 +99,7 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWhenAuthServerTimedout() {
-        Conf::setNetworkTimeout(1000);
+        Conf::setNetworkTimeout(10);
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-timeout');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
@@ -186,7 +186,7 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerTimedout() {
-        Conf::setNetworkTimeout(1000);
+        Conf::setNetworkTimeout(10);
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-timeout');
         $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
