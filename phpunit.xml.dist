@@ -13,8 +13,11 @@
 
     <testsuites>
         <testsuite name="qcloud/weapp-sdk">
-            <directory>./tests/</directory>
-            <exclude>/tests/test-server/</exclude>
+            <!-- <directory>./tests/</directory> -->
+            <!-- <exclude>/tests/test-server/</exclude> -->
+            <file>./tests/ConfTest.php</file>
+            <file>./tests/Auth/LoginServiceTest.php</file>
+            <file>./tests/Tunnel/TunnelServiceTest.php</file>
         </testsuite>
     </testsuites>
 
