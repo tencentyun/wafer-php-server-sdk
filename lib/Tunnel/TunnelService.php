@@ -165,7 +165,7 @@ class TunnelService {
      * 解析 Post Payload 数据
      */
     private static function parsePostPayloadData() {
-        $contents = file_get_contents('php://input');
+        $contents = Util::getPostPayload();
         $body = json_decode($contents, TRUE);
         Logger::debug('TunnelService::handle [post payload] =>', $body ? $body : $contents);
 

@@ -2,6 +2,8 @@
 namespace QCloud_WeApp_SDK\Helper;
 
 class Util {
+    private static $postPayload = NULL;
+
     public static function getHttpHeader($headerKey) {
         $headerKey = strtoupper($headerKey);
         $headerKey = str_replace('-', '_', $headerKey);
@@ -20,5 +22,17 @@ class Util {
         }
 
         Logger::debug("Util::writeJsonResult => [{$statusCode}]", $obj);
+    }
+
+    public static function getPostPayload() {
+        if (is_string(self::$postPayload)) {
+            return self::$postPayload;
+        }
+
+        return file_get_contents('php://input');
+    }
+
+    public static function setPostPayload($payload) {
+        self::$postPayload = $payload;
     }
 }
