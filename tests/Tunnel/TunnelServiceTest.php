@@ -341,6 +341,36 @@ class TunnelServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(0, $result['code']);
     }
 
+    public function testBroadcastExpect500() {
+        $tunnelIds = array('expect-500', 'tunnel2');
+        $messageType = 'hi';
+        $messageContent = 'hello, everybody!';
+
+        $result = TunnelService::broadcast($tunnelIds, $messageType, $messageContent);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testBroadcastExpectInvalidJson() {
+        $tunnelIds = array('expect-invalid-json', 'tunnel2');
+        $messageType = 'hi';
+        $messageContent = 'hello, everybody!';
+
+        $result = TunnelService::broadcast($tunnelIds, $messageType, $messageContent);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testBroadcastExpectFailedResult() {
+        $tunnelIds = array('expect-failed-result', 'tunnel2');
+        $messageType = 'hi';
+        $messageContent = 'hello, everybody!';
+
+        $result = TunnelService::broadcast($tunnelIds, $messageType, $messageContent);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
     public function testEmitUseCase() {
         $tunnelId = 'tunnel1';
         $messageType = 'hi';
@@ -351,10 +381,59 @@ class TunnelServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(0, $result['code']);
     }
 
+    public function testEmitExpect500() {
+        $tunnelId = 'expect-500';
+        $messageType = 'hi';
+        $messageContent = 'hello, how are you!';
+
+        $result = TunnelService::emit($tunnelId, $messageType, $messageContent);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testEmitExpectInvalidJson() {
+        $tunnelId = 'expect-invalid-json';
+        $messageType = 'hi';
+        $messageContent = 'hello, how are you!';
+
+        $result = TunnelService::emit($tunnelId, $messageType, $messageContent);
+        var_export($result);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testEmitExpectFailedResult() {
+        $tunnelId = 'expect-failed-result';
+        $messageType = 'hi';
+        $messageContent = 'hello, how are you!';
+
+        $result = TunnelService::emit($tunnelId, $messageType, $messageContent);
+
+        $this->assertNotEquals(0, $result['code']);
+    }
+
     public function testCloseTunnelUseCase() {
         $tunnelId = 'tunnel1';
         $result = TunnelService::closeTunnel($tunnelId);
         $this->assertSame(0, $result['code']);
+    }
+
+    public function testCloseTunnelExpect500() {
+        $tunnelId = 'expect-500';
+        $result = TunnelService::closeTunnel($tunnelId);
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testCloseTunnelExpectInvalidJson() {
+        $tunnelId = 'expect-invalid-json';
+        $result = TunnelService::closeTunnel($tunnelId);
+        $this->assertNotEquals(0, $result['code']);
+    }
+
+    public function testCloseTunnelExpectFailedResult() {
+        $tunnelId = 'expect-failed-result';
+        $result = TunnelService::closeTunnel($tunnelId);
+        $this->assertNotEquals(0, $result['code']);
     }
 
     private function setHttpHeader($headerKey, $headerVal) {
