@@ -17,9 +17,11 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
         ));
     }
 
-    public function testLoginUseCase() {
+    public function setUp() {
         $this->setOutputCallback(function () {});
+    }
 
+    public function testLoginUseCase() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'valid-code');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
@@ -35,11 +37,9 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWithoutCodeAndEncryptData() {
-        $this->setOutputCallback(function () {});
-
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -47,14 +47,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWithInvalidCode() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'invalid-code');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -62,14 +60,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWithInvalidEncryptData() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'valid-code');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'invalid-data');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -77,14 +73,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWhenAuthServerRespondWithInvalidData() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-invalid-json');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -92,14 +86,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWhenAuthServerRespondWith500() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-500');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -107,15 +99,13 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testLoginWhenAuthServerTimedout() {
-        $this->setOutputCallback(function () {});
-
         Conf::setNetworkTimeout(1000);
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-timeout');
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -123,10 +113,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckUseCase() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'valid-id');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertSame(0, $result['code']);
@@ -136,11 +124,9 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWithoutIdAndSkey() {
-        $this->setOutputCallback(function () {});
-
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -148,14 +134,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWithInvalidId() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'invalid-id');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -163,14 +147,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWithInvalidSkey() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'valid-id');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'invalid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'invalid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -178,14 +160,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerRespondWithInvalidData() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-invalid-json');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -193,14 +173,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerRespondWith500() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-500');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -208,15 +186,13 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerTimedout() {
-        $this->setOutputCallback(function () {});
-
         Conf::setNetworkTimeout(1000);
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-timeout');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -224,14 +200,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerRespondWith60011ErrorCode() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-60011');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
@@ -239,14 +213,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCheckWhenAuthServerRespondWith60012ErrorCode() {
-        $this->setOutputCallback(function () {});
-
         $this->setHttpHeader(Constants::WX_HEADER_ID, 'expect-60012');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-key');
+        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
 
         $result = LoginService::check();
         $this->assertInternalType('int', $result['code']);
-        $this->assertFalse($result['code'] === 0);
+        $this->assertNotEquals(0, $result['code']);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
