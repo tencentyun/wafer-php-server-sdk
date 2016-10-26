@@ -1,5 +1,11 @@
 # 腾讯云微信小程序服务端 SDK - PHP
 
+[![Latest Stable Version][packagist-image]][packagist-url]
+[![Minimum PHP Version][php-image]][php-url]
+[![Build Status][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
+[![License][license-image]][license-url]
+
 本 SDK 需要和 [微信小程序客户端腾讯云增强 SDK](https://github.com/tencentyun/weapp-client-sdk) 配合一起使用，提供的服务有：
 
 + 登录鉴权服务
@@ -14,8 +20,6 @@ composer require qcloud/weapp-sdk
 ```
 
 - 方法二： 直接下载本仓库 `ZIP` 包解压到项目目录中
-
-> 本 SDK 支持 PHP v5.4.0 以上的版本
 
 ## 使用
 
@@ -123,3 +127,14 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 ## LICENSE
 
 [MIT](LICENSE)
+
+[packagist-image]: https://img.shields.io/packagist/v/qcloud/weapp-sdk.svg
+[packagist-url]: https://packagist.org/packages/qcloud/weapp-sdk
+[php-image]: https://img.shields.io/badge/PHP-%3E%3D%205.4-8892BF.svg
+[php-url]: https://secure.php.net/
+[travis-image]: https://travis-ci.org/tencentyun/weapp-php-server-sdk.svg?branch=master
+[travis-url]: https://travis-ci.org/tencentyun/weapp-php-server-sdk
+[coveralls-image]: https://coveralls.io/repos/github/tencentyun/weapp-php-server-sdk/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/tencentyun/weapp-php-server-sdk?branch=master
+[license-image]: http://img.shields.io/npm/l/qcloud-weapp-server-sdk.svg
+[license-url]: LICENSE
