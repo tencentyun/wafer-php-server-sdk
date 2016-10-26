@@ -28,6 +28,9 @@ class Conf {
     // 和信道服务器通信的签名密钥，该密钥需要保密
     private static $TunnelSignatureKey = '';
 
+    // 信道服务通信是否需要校验签名
+    private static $TunnelCheckSignature = TRUE;
+
     // 网络请求超时时长（单位：毫秒）
     private static $NetworkTimeout = 15000;
 
