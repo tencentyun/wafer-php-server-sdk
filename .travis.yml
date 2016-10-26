@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - '5.4'
+  - '5.5'
+  - '5.6'
+  - '7.0'
+  - hhvm
+
+install:
+  - composer install
+
+before_script:
+  - composer run-script test-server &
+
+script:
+  - sleep 1
+  - composer run-script test
+
+after_success:
+  - composer run-script coveralls
