@@ -9,11 +9,7 @@ use \QCloud_WeApp_SDK\Helper\Util as Util;
 use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 
 class TunnelService {
-    public static function handle(ITunnelHandler $handler, $options = array()) {
-        if (!is_array($options)) {
-            $options = array();
-        }
-
+    public static function handle(ITunnelHandler $handler, array $options = array()) {
         $options = array_merge(array('checkLogin' => FALSE), $options);
 
         switch ($_SERVER['REQUEST_METHOD']) {
