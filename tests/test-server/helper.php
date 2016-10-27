@@ -41,11 +41,13 @@ function send($input, $statusCode = 200) {
     global $begin;
     $end = round(microtime(TRUE) * 1000);
 
+    debug('----------------------------------------');
     debug("{$_SERVER['REQUEST_METHOD']} {$_SERVER['PATH_INFO']} => [{$statusCode}]", array(
         '[body]' => $_BODY,
         '[result]' => $input,
         '[timecost]' => sprintf('%sms', $end - $begin),
     ));
+    debug('----------------------------------------' . PHP_EOL);
 
     echo $result;
     die;

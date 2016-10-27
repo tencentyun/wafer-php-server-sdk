@@ -9,7 +9,7 @@ define('FW', TRUE);
 require('./helper.php');
 
 // log debug info?
-$_LOG_DEBUG = FALSE;
+$_LOG_DEBUG = TRUE;
 
 // parse `application/json` payload
 $_BODY = json_decode(file_get_contents('php://input'), TRUE);
