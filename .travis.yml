@@ -14,7 +14,7 @@ before_script:
   - composer run-script test-server &
 
 script:
-  - sleep 1
+  - sleep 5
   - composer run-script test
 
 after_success:
