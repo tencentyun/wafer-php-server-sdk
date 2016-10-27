@@ -39,8 +39,8 @@
         <ini name="error_reporting" value="-1"/>
         <ini name="date.timezone" value="Asia/Shanghai"/>
         <const name="SERVER_HOST" value="www.qcloua.la"/>
-        <const name="AUTH_SERVER_URL" value="http://127.0.0.1:9399/index.php/auth"/>
-        <const name="TUNNEL_SERVER_URL" value="http://127.0.0.1:9399/index.php/tunnel"/>
+        <const name="AUTH_SERVER_URL" value="http://127.0.0.1:9993/auth"/>
+        <const name="TUNNEL_SERVER_URL" value="http://127.0.0.1:9993/tunnel"/>
         <const name="TUNNEL_SIGNATURE_KEY" value="9f338d1f0ecc37d25ac7b161c1d7bf72"/>
         <const name="NETWORK_TIMEOUT" value="1000"/>
     </php>
