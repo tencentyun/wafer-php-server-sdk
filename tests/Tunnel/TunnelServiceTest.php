@@ -70,19 +70,6 @@ class TunnelServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertInternalType('string', $body['url']);
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testHandleGetWithNonArrayOptions() {
-        $this->setHttpHeader(Constants::WX_HEADER_ID, 'valid-id');
-        $this->setHttpHeader(Constants::WX_HEADER_SKEY, 'valid-skey');
-
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/tunnel';
-
-        TunnelService::handle($this->mockedTunnelHandler, 'this is not an array');
-    }
-
     public function testHandleGetWithCheckLoginAndNoSessionInfo() {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/tunnel';
