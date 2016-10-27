@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit convertErrorsToExceptions="true"
+<phpunit backupGlobals="false"
+         convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          stopOnError="true"
@@ -37,7 +38,6 @@
 
     <php>
         <ini name="error_reporting" value="-1"/>
-        <ini name="always_populate_raw_post_data" value="-1"/>
         <ini name="date.timezone" value="Asia/Shanghai"/>
         <const name="SERVER_HOST" value="www.qcloua.la"/>
         <const name="AUTH_SERVER_URL" value="http://127.0.0.1:9993/auth"/>
