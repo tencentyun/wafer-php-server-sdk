@@ -2,6 +2,9 @@
 
 use \QCloud_WeApp_SDK\Conf;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ConfTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         Conf::setup(array(
