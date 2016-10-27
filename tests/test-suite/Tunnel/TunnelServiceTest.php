@@ -256,7 +256,7 @@ class TunnelServiceTest extends PHPUnit_Framework_TestCase {
             ->with(
                 $this->identicalTo('tunnel1'),
                 $this->identicalTo('UnknownRaw'),
-                $this->identicalTo('')
+                $this->identicalTo(NULL)
             );
 
         TunnelService::handle($this->mockedTunnelHandler);

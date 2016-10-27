@@ -211,7 +211,7 @@ class TunnelService {
                 $content = array();
             }
         } else {
-            $packet['content'] = '';
+            $packet['content'] = NULL;
             $content = array();
         }
 
