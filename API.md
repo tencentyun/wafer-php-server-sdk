@@ -62,6 +62,18 @@
 
 `void`
 
+#### Conf::setNetworkTimeout(int $networkTimeout)
+
+该静态方法用于设置网络请求超时时长（单位：毫秒），默认值为 30,000 毫秒，即 30 秒。
+
+##### 参数
+
+- `$networkTimeout` - 网络请求超时时长
+
+##### 返回值
+
+`void`
+
 #### Conf::setup(array $config)
 
 可以使用本方法批量设置以上所有配置。
@@ -73,6 +85,7 @@
     - `AuthServerUrl` - 鉴权服务器服务地址
     - `TunnelServerUrl` - 信道服务器服务地址
     - `TunnelSignatureKey` - 通信签名密钥
+    - `NetworkTimeout` - 网络请求超时时长（单位：毫秒）
 
 ##### 返回值
 
