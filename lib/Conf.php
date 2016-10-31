@@ -32,7 +32,7 @@ class Conf {
     private static $TunnelCheckSignature = TRUE;
 
     // 网络请求超时时长（单位：毫秒）
-    private static $NetworkTimeout = 15000;
+    private static $NetworkTimeout = 30000;
 
     public static function __callStatic($name, $arguemnts) {
         $class = get_class();
