@@ -21,6 +21,10 @@ composer require qcloud/weapp-sdk
 
 - 方法二： 直接下载本仓库 `ZIP` 包解压到项目目录中
 
+## API
+
+参见 [API 文档](./API.md)
+
 ## 使用
 
 ### 加载 SDK
@@ -115,10 +119,6 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 ### 详细示例
 
 参见项目：[腾讯云微信小程序服务端 DEMO - PHP](https://github.com/tencentyun/weapp-php-server-demo)
-
-## API
-
-参见 [API 文档](./API.md)
 
 ## LICENSE
 
