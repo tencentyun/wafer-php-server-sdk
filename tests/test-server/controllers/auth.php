@@ -31,10 +31,10 @@ class AuthController {
         }
     }
 
-    private function handleLoginRequest($code, $encryptData, $iv) {
+    private function handleLoginRequest($code, $encryptedData, $iv) {
         $this->respond4CommonErrors($code);
 
-        if ($code === 'valid-code' && $encryptData === 'valid-data' && $iv === 'valid-iv') {
+        if ($code === 'valid-code' && $encryptedData === 'valid-data' && $iv === 'valid-iv') {
             return send(array(
                 'returnCode' => 0,
                 'returnMessage' => 'OK',
@@ -51,7 +51,7 @@ class AuthController {
 
         send(array(
             'returnCode' => -1,
-            'returnMessage' => 'invalid code or encryptData',
+            'returnMessage' => 'invalid code, encryptedData or iv',
         ));
     }
 
