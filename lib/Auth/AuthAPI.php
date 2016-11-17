@@ -8,8 +8,8 @@ use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class AuthAPI {
-    public static function login($code, $encrypt_data) {
-        $param = compact('code', 'encrypt_data');
+    public static function login($code, $encrypt_data, $iv) {
+        $param = compact('code', 'encrypt_data', 'iv');
         return self::sendRequest(Constants::INTERFACE_LOGIN, $param);
     }
 

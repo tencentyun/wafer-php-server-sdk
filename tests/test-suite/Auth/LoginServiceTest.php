@@ -23,7 +23,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testLoginUseCase() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'valid-code');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
         $result = LoginService::login();
         $this->assertSame(0, $result['code']);
@@ -48,7 +49,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testLoginWithInvalidCode() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'invalid-code');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
@@ -61,7 +63,22 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testLoginWithInvalidEncryptData() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'valid-code');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'invalid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'invalid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
+
+        $result = LoginService::login();
+        $this->assertInternalType('int', $result['code']);
+        $this->assertNotEquals(0, $result['code']);
+
+        $body = json_decode($this->getActualOutput(), TRUE);
+        $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
+        $this->assertArrayHasKey('error', $body);
+    }
+
+    public function testLoginWithInvalidIV() {
+        $this->setHttpHeader(Constants::WX_HEADER_CODE, 'valid-code');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'invalid-iv');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
@@ -74,7 +91,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testLoginWhenAuthServerRespondWithInvalidData() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-invalid-json');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
@@ -87,7 +105,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testLoginWhenAuthServerRespondWith500() {
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-500');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);
@@ -101,7 +120,8 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     public function testLoginWhenAuthServerTimedout() {
         Conf::setNetworkTimeout(10);
         $this->setHttpHeader(Constants::WX_HEADER_CODE, 'expect-timeout');
-        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
+        $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
         $result = LoginService::login();
         $this->assertInternalType('int', $result['code']);

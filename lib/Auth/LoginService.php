@@ -9,9 +9,10 @@ class LoginService {
     public static function login() {
         try {
             $code = self::getHttpHeader(Constants::WX_HEADER_CODE);
-            $encryptData = self::getHttpHeader(Constants::WX_HEADER_ENCRYPT_DATA);
+            $encryptedData = self::getHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA);
+            $iv = self::getHttpHeader(Constants::WX_HEADER_IV);
 
-            $loginResult = AuthAPI::login($code, $encryptData);
+            $loginResult = AuthAPI::login($code, $encryptedData, $iv);
 
             $result = array();
             $result[Constants::WX_SESSION_MAGIC_ID] = 1;

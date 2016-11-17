@@ -12,12 +12,13 @@ class AuthController {
         $interfaceName = @$_BODY['interface']['interfaceName'];
         $code = @$_BODY['interface']['para']['code'];
         $encrypt_data = @$_BODY['interface']['para']['encrypt_data'];
+        $iv = @$_BODY['interface']['para']['iv'];
         $id = @$_BODY['interface']['para']['id'];
         $skey = @$_BODY['interface']['para']['skey'];
 
         switch ($interfaceName) {
         case 'qcloud.cam.id_skey':
-            $this->handleLoginRequest($code, $encrypt_data);
+            $this->handleLoginRequest($code, $encrypt_data, $iv);
             break;
 
         case 'qcloud.cam.auth':
@@ -30,10 +31,10 @@ class AuthController {
         }
     }
 
-    private function handleLoginRequest($code, $encryptData) {
+    private function handleLoginRequest($code, $encryptData, $iv) {
         $this->respond4CommonErrors($code);
 
-        if ($code === 'valid-code' && $encryptData === 'valid-data') {
+        if ($code === 'valid-code' && $encryptData === 'valid-data' && $iv === 'valid-iv') {
             return send(array(
                 'returnCode' => 0,
                 'returnMessage' => 'OK',
