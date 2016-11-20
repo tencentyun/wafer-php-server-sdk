@@ -144,5 +144,5 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 [travis-url]: https://travis-ci.org/tencentyun/wafer-php-server-sdk
 [coveralls-image]: https://coveralls.io/repos/github/tencentyun/wafer-php-server-sdk/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/tencentyun/wafer-php-server-sdk?branch=master
-[license-image]: http://img.shields.io/npm/l/qcloud-weapp-server-sdk.svg
+[license-image]: https://img.shields.io/github/license/tencentyun/wafer-php-server-sdk.svg
 [license-url]: LICENSE
