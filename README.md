@@ -6,7 +6,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![License][license-image]][license-url]
 
-本仓库是 [Wafer](https://github.com/tencentyun/wafer) 组成部分，以 SDK 的形式为业务服务器提供以下服务：
+本项目是 [Wafer](https://github.com/tencentyun/wafer) 组成部分，以 SDK 的形式为业务服务器提供以下服务：
 
 + [会话服务](https://github.com/tencentyun/wafer/wiki/会话服务)
 + [信道服务](https://github.com/tencentyun/wafer/wiki/信道服务)
