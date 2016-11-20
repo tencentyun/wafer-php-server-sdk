@@ -140,9 +140,9 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 [packagist-url]: https://packagist.org/packages/qcloud/weapp-sdk
 [php-image]: https://img.shields.io/badge/PHP-%3E%3D%205.4-8892BF.svg
 [php-url]: https://secure.php.net/
-[travis-image]: https://travis-ci.org/tencentyun/weapp-php-server-sdk.svg?branch=master
-[travis-url]: https://travis-ci.org/tencentyun/weapp-php-server-sdk
-[coveralls-image]: https://coveralls.io/repos/github/tencentyun/weapp-php-server-sdk/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/tencentyun/weapp-php-server-sdk?branch=master
+[travis-image]: https://travis-ci.org/tencentyun/wafer-php-server-sdk.svg?branch=master
+[travis-url]: https://travis-ci.org/tencentyun/wafer-php-server-sdk
+[coveralls-image]: https://coveralls.io/repos/github/tencentyun/wafer-php-server-sdk/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/tencentyun/wafer-php-server-sdk?branch=master
 [license-image]: http://img.shields.io/npm/l/qcloud-weapp-server-sdk.svg
 [license-url]: LICENSE
