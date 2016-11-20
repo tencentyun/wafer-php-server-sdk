@@ -1,4 +1,4 @@
-# Wafer - 服务端 SDK - PHP
+# Wafer 服务端 SDK - PHP
 
 [![Latest Stable Version][packagist-image]][packagist-url]
 [![Minimum PHP Version][php-image]][php-url]
