@@ -28,7 +28,7 @@ class AuthAPI {
         $end = round(microtime(TRUE) * 1000);
 
         // 记录请求日志
-        Logger::debug("POST {$url}} => [{$status}]", array(
+        Logger::debug("POST {$url} => [{$status}]", array(
             '[请求]' => $data,
             '[响应]' => $body,
             '[耗时]' => sprintf('%sms', $end - $begin),
