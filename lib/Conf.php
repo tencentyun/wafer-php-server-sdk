@@ -2,6 +2,7 @@
 namespace QCloud_WeApp_SDK;
 
 use \Exception as Exception;
+use \QCloud_WeApp_SDK\Constants;
 
 class Conf {
     // 是否输出 SDK 日志
@@ -14,13 +15,41 @@ class Conf {
     private static $LogThreshold = 0;
 
     // SDK 日志输出级别（数组）
-    private static $LogThresholdArray = array();
+    private static $LogThresholdArray = [];
+
+    // 程序运行的根路径
+    private static $RootPath = '';
+
+    // 微信小程序 AppID
+    private static $AppId = '';
+    
+    // 微信小程序 AppSecret
+    private static $AppSecret = '';
+    
+    // 微信小程序 AppSecret
+    private static $UseQcloudLogin = true;
+    
+    // 数据库配置信息
+    private static $Mysql = [
+        'host' => 'localhost',
+        'port' => 3306,
+        'user' => 'root',
+        'db'   => 'cAuth',
+        'pass' => '',
+        'char' => 'utf8mb4'
+    ];
+    
+    // COS 配置信息
+    private static $Cos = [
+        'region' => 'cn-south',
+        'fileBucket' => 'qcloudtest',
+        'uploadFolder' => '',
+        'maxSize' => 5,
+        'field' => 'file'
+    ];
 
     // 当前使用 SDK 服务器的主机，该主机需要外网可访问
     private static $ServerHost = '';
-
-    // 鉴权服务器服务地址
-    private static $AuthServerUrl = '';
 
     // 信道服务器服务地址
     private static $TunnelServerUrl = '';
@@ -28,11 +57,23 @@ class Conf {
     // 和信道服务器通信的签名密钥，该密钥需要保密
     private static $TunnelSignatureKey = '';
 
-    // 信道服务通信是否需要校验签名
-    private static $TunnelCheckSignature = TRUE;
+    // 腾讯云 AppID
+    private static $QcloudAppId = 123456789;
+    
+    // 腾讯云 QcloudSecretId
+    private static $QcloudSecretId = '';
+
+    // 腾讯云 QcloudSecretKey
+    private static $QcloudSecretKey = '';
+    
+    // 微信消息通知 token
+    private static $WxMessageToken = '';
+
+    // 微信登录态有效期
+    private static $WxLoginExpires = 7200;
 
     // 网络请求超时时长（单位：毫秒）
-    private static $NetworkTimeout = 30000;
+    private static $NetworkTimeout = 3000;
 
     public static function __callStatic($name, $arguemnts) {
         $class = get_class();
@@ -74,14 +115,23 @@ class Conf {
 
     public static function setup($config = NULL) {
         if (!is_array($config)) {
-            return;
+            throw new Exception(Constants::E_INIT_LOST_CONFIG);
         }
 
         $class = get_class();
 
         foreach ($config as $key => $value) {
-            if (property_exists($class, $key) && gettype($value) === gettype(self::$$key)) {
-                self::$$key = $value;
+            $key = ucfirst($key);
+            if (property_exists($class, $key)) {
+                if (gettype($value) === gettype(self::$$key)) {
+                    if (gettype($value) === 'array') {
+                        self::$$key = array_merge(self::$$key, $value);
+                    } else {
+                        self::$$key = $value;
+                    }
+                } else {
+                    throw new Exception(Constants::E_INIT_CONFIG_TYPE . ': ' . $key);
+                }
             }
         }
     }
