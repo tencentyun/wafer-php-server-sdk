@@ -4,6 +4,7 @@ namespace QCloud_WeApp_SDK\Auth;
 use \Exception as Exception;
 
 use \QCloud_WeApp_SDK\Helper\Util as Util;
+use \QCloud_WeApp_SDK\Constants as Constants;
 
 class LoginService {
     public static function login() {
@@ -12,34 +13,13 @@ class LoginService {
             $encryptedData = self::getHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA);
             $iv = self::getHttpHeader(Constants::WX_HEADER_IV);
 
-            $loginResult = AuthAPI::login($code, $encryptedData, $iv);
-
-            $result = array();
-            $result[Constants::WX_SESSION_MAGIC_ID] = 1;
-            $result['session'] = array(
-                'id' => $loginResult['id'],
-                'skey' => $loginResult['skey'],
-            );
-
-            Util::writeJsonResult($result);
-
-            return array(
-                'code' => 0,
-                'message' => 'ok',
-                'data' => array(
-                    'userInfo' => $loginResult['user_info'],
-                ),
-            );
-
+            return AuthAPI::login($code, $encryptedData, $iv);
         } catch (Exception $e) {
-            $error = new LoginServiceException(Constants::ERR_LOGIN_FAILED, $e->getMessage());
-            self::writeError($error);
-
-            return array(
-                'code' => -1,
-                'message' => $error->getMessage(),
-                'data' => array(),
-            );
+            self::writeError($e);
+            return [
+                'loginState' => Constants::E_AUTH,
+                'error' => $e->getMessage()
+            ];
         }
     }
 
