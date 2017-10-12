@@ -15,11 +15,6 @@ class Signature {
      * 校验签名
      */
     public static function check($input, $signature) {
-        // 不需要校验签名
-        if (!Conf::getTunnelCheckSignature()) {
-            return TRUE;
-        }
-
         return self::compute($input) === $signature;
     }
 }

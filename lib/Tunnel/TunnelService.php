@@ -4,7 +4,7 @@ namespace QCloud_WeApp_SDK\Tunnel;
 use \Exception as Exception;
 
 use \QCloud_WeApp_SDK\Conf as Conf;
-use \QCloud_WeApp_SDK\Auth\LoginService as LoginService;
+use \QCloud_WeApp_SDK\Constants as Constants;
 use \QCloud_WeApp_SDK\Helper\Util as Util;
 use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 
@@ -13,17 +13,16 @@ class TunnelService {
         $options = array_merge(array('checkLogin' => FALSE), $options);
 
         switch ($_SERVER['REQUEST_METHOD']) {
-        case 'GET':
-            self::handleGet($handler, $options);
-            break;
+            case 'GET':
+                self::handleGet($handler, $options);
+                break;
 
-        case 'POST':
-            self::handlePost($handler, $options);
-            break;
+            case 'POST':
+                self::handlePost($handler, $options);
+                break;
 
-        default:
-            Util::writeJsonResult(array('code' => 501, 'message' => 'Not Implemented'), 501);
-            break;
+            default:
+                break;
         }
     }
 
@@ -75,17 +74,6 @@ class TunnelService {
 
     private static function handleGet(ITunnelHandler $handler, $options) {
         $tunnelId = '';
-        $userInfo = NULL;
-
-        if ($options['checkLogin']) {
-            $result = LoginService::check();
-
-            if ($result['code'] !== 0) {
-                return;
-            }
-
-            $userInfo = $result['data']['userInfo'];
-        }
 
         try {
             $body = TunnelAPI::requestConnect(self::buildReceiveUrl());
@@ -101,14 +89,11 @@ class TunnelService {
             $data = json_decode($data, TRUE);
             $tunnelId = $data['tunnelId'];
         } catch (Exception $e) {
-            Util::writeJsonResult(array('error' => $e->getMessage()));
-            return;
+            throw new Exception(Constants::E_CONNECT_TO_TUNNEL_SERVER . ': ' . $e->getMessage());
         }
 
-        Util::writeJsonResult(array('url' => $data['connectUrl']));
-
-        Logger::debug('ITunnelHandler [onRequest] =>', compact('tunnelId', 'userInfo'));
-        $handler->onRequest($tunnelId, $userInfo);
+        Logger::debug('ITunnelHandler [onRequest] =>', compact('tunnelId'));
+        $handler->onRequest($tunnelId, $data['connectUrl']);
     }
 
     private static function handlePost(ITunnelHandler $handler, $options) {
