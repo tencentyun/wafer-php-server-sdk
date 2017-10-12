@@ -10,20 +10,22 @@ use \QCloud_WeApp_SDK\Helper\Logger as Logger;
 use \QCloud_WeApp_SDK\Helper\Request as Request;
 
 class AuthAPI {
+    /**
+     * 用户登录接口
+     * @param {string} $code        wx.login 颁发的 code
+     * @param {string} $encryptData 加密过的用户信息
+     * @param {string} $iv          解密用户信息的向量
+     * @return {array} { loginState, userinfo }
+     */
     public static function login($code, $encryptData, $iv) {
-        /**
-         * 登录逻辑分为四步骤
-         * 1. 获取 session key
-         * 2. 生成 3rd key
-         * 3. 解密数据
-         * 4. 储存到数据库中
-         */
-
         // 1. 获取 session key
         $sessionKey = self::getSessionKey($code);
+
+        // 2. 生成 3rd key (skey)
         $skey = sha1($sessionKey . mt_rand());
         
         /**
+         * 3. 解密数据
          * 由于官方的解密方法不兼容 PHP 7.1+ 的版本
          * 这里弃用微信官方的解密方法
          * 采用推荐的 openssl_decrypt 方法（支持 >= 5.3.0 的 PHP）
@@ -38,6 +40,7 @@ class AuthAPI {
         );
         $userinfo = json_decode($decryptData);
 
+        // 4. 储存到数据库中
         User::storeUserInfo($userinfo, $skey, $sessionKey);
 
         return [
@@ -46,9 +49,29 @@ class AuthAPI {
         ];
     }
 
-    public function checkLogin($id, $skey) {
-        $param = compact('id', 'skey');
-        return self::sendRequest(Constants::INTERFACE_CHECK, $param);
+    public static function checkLogin($skey) {
+        $userinfo = User::findUserBySKey($skey);
+        if ($userinfo === NULL) {
+            return [
+                'loginState' => Constants::E_AUTH,
+                'userinfo' => []
+            ];
+        }
+
+        $wxLoginExpires = Conf::getWxLoginExpires();
+        $timeDifference = time() - strtotime($userinfo->last_visit_time);
+        
+        if ($timeDifference > $wxLoginExpires) {
+            return [
+                'loginState' => Constants::E_AUTH,
+                'userinfo' => []
+            ];
+        } else {
+            return [
+                'loginState' => Constants::S_AUTH,
+                'userinfo' => json_decode($userinfo->user_info, true)
+            ];
+        }
     }
 
     /**

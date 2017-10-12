@@ -15,7 +15,6 @@ class LoginService {
 
             return AuthAPI::login($code, $encryptedData, $iv);
         } catch (Exception $e) {
-            self::writeError($e);
             return [
                 'loginState' => Constants::E_AUTH,
                 'error' => $e->getMessage()
@@ -25,51 +24,15 @@ class LoginService {
 
     public static function check() {
         try {
-            $id = self::getHttpHeader(Constants::WX_HEADER_ID);
             $skey = self::getHttpHeader(Constants::WX_HEADER_SKEY);
 
-            $checkResult = AuthAPI::checkLogin($id, $skey);
-
-            return array(
-                'code' => 0,
-                'message' => 'ok',
-                'data' => array(
-                    'userInfo' => $checkResult['user_info'],
-                ),
-            );
+            return AuthAPI::checkLogin($skey);
         } catch (Exception $e) {
-            if ($e instanceof AuthAPIException) {
-                switch ($e->getCode()) {
-                case Constants::RETURN_CODE_SKEY_EXPIRED:
-                case Constants::RETURN_CODE_WX_SESSION_FAILED:
-                    $error = new LoginServiceException(Constants::ERR_INVALID_SESSION, $e->getMessage());
-                    break;
-
-                default:
-                    $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
-                    break;
-                }
-            } else {
-                $error = new LoginServiceException(Constants::ERR_CHECK_LOGIN_FAILED, $e->getMessage());
-            }
-
-            self::writeError($error);
-
-            return array(
-                'code' => -1,
-                'message' => $error->getMessage(),
-                'data' => array(),
-            );
+            return [
+                'loginState' => Constants::E_AUTH,
+                'error' => $e->getMessage()
+            ];
         }
-    }
-
-    private static function writeError(LoginServiceException $err) {
-        $result = array();
-        $result[Constants::WX_SESSION_MAGIC_ID] = 1;
-        $result['error'] = $err->getType();
-        $result['message'] = $err->getMessage();
-
-        Util::writeJsonResult($result);
     }
 
     private static function getHttpHeader($headerKey) {

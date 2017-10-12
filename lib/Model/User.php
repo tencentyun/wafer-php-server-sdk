@@ -25,4 +25,8 @@ class User
             );
         }
     }
+
+    public static function findUserBySKey ($skey) {
+        return DB::row('cSessionInfo', ['*'], compact('skey'));
+    }
 }
