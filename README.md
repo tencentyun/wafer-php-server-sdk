@@ -1,15 +1,18 @@
 # Wafer 服务端 SDK - PHP
 
 [![Latest Stable Version][packagist-image]][packagist-url]
-[![Minimum PHP Version][php-image]][php-url]
-[![Build Status][travis-image]][travis-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
 [![License][license-image]][license-url]
 
-本项目是 [Wafer](https://github.com/tencentyun/wafer) 组成部分，以 SDK 的形式为业务服务器提供以下服务：
+## 介绍
 
-+ [会话服务](https://github.com/tencentyun/wafer/wiki/会话服务)
-+ [信道服务](https://github.com/tencentyun/wafer/wiki/信道服务)
+Wafer 服务端 SDK 是腾讯云为微信小程序开发者提供的快速开发库，SDK 封装了以下功能供小程序开发者快速调用：
+
+- 用户登录与验证
+- 信道服务
+- 图片上传
+- 数据库
+
+开发者只需要根据文档对 SDK 进行初始化配置，就可以获得以上能力。你还可以直接到[腾讯云小程序控制台](https://console.qcloud.com/la)购买小程序解决方案，可以得到运行本示例所需的资源和服务，其中包括已部署好的相关程序、示例代码及自动下发的 SDK 配置文件 `/etc/qcloud/sdk.config`。
 
 ## 安装
 
@@ -43,52 +46,75 @@ require_once 'path/to/qcloud/weapp-sdk/AutoLoader.php';
 use \QCloud_WeApp_SDK\Conf;
 
 Config::setup(array(
-    'ServerHost' => '业务服务器的主机名',
-    'AuthServerUrl' => '鉴权服务器服务地址',
-    'TunnelServerUrl' => '信道服务器服务地址',
-    'TunnelSignatureKey' => '和信道服务器通信的签名密钥',
+    'appId'          => '微信小程序 AppID',
+    'appSecret'      => '微信小程序 AppSecret',
+    'useQcloudLogin' => false,
+    'mysql' => [
+        'host' => 'localhost',
+        'port' => 3306,
+        'user' => 'root',
+        'pass' => '',
+        'db'   => 'cAuth',
+        'char' => 'utf8mb4'
+    ],
+    'cos' => [
+        'region'       => 'cn-south',
+        'fileBucket'   => 'test',
+        'uploadFolder' => ''
+    ],
+    'serverHost'         => '1234567.qcloud.la',
+    'tunnelServerUrl'    => '1234567.ws.qcloud.la',
+    'tunnelSignatureKey' => 'abcdefghijkl',
+    'qcloudAppId'        => '121000000',
+    'qcloudSecretId'     => 'ABCDEFG',
+    'qcloudSecretKey'    => 'abcdefghijkl',
+    'wxMessageToken'     => 'abcdefghijkl',
 ));
 ```
 
-关于 SDK 配置字段的含义以及配置文件格式的更多信息，[请参考服务端 SDK 配置](https://github.com/tencentyun/wafer/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE)。
+具体配置项说明请查看：[API 文档](/API.md#sdk-配置)。
 
-### 使用会话服务
-
-#### 处理用户登录请求
-
-业务服务器提供一个路由（如 `/login`）处理客户端的登录请求，直接使用 SDK 的 [LoginService::login()](https://github.com/tencentyun/wafer-php-server-sdk/blob/master/API.md#loginservicelogin) 方法即可完成登录处理。登录成功后，可以获取用户信息。
+### 处理用户登录请求
 
 ```php
 use \QCloud_WeApp_SDK\Auth\LoginService;
+use \QCloud_WeApp_SDK\Constants;
 
 $result = LoginService::login();
 
-if ($result['code'] === 0) {
-    // 微信用户信息：`$result['data']['userInfo']`
+// $result => [
+//   loginState: 1  // 1表示登录成功，0表示登录失败
+//   userinfo: []   // 用户信息
+// ]
+
+if ($result['loginState'] === Constants::S_AUTH) {
+    // 微信用户信息：`$result['userinfo']['userinfo']`
 } else {
-    // 登录失败原因：`$result['message']`
+    // 登录失败原因：`$result['error']`
 }
 ```
 
-#### 检查请求登录态
-
-客户端交给业务服务器的请求，业务服务器可以通过 SDK 的 [LoginService::check()](https://github.com/tencentyun/wafer-php-server-sdk/blob/master/API.md#loginservicecheck) 方法来检查该请求是否包含合法的会话。如果包含，则会返回会话对应的用户信息。
+### 检查请求登录态
 
 ```php
 use \QCloud_WeApp_SDK\Auth\LoginService;
+use \QCloud_WeApp_SDK\Constants;
 
 $result = LoginService::check();
 
-if ($result['code'] !== 0) {
-    // 登录态失败原因：`$result['message']`
+// $result => [
+//   loginState: 1  // 1表示登录成功，0表示登录失败
+//   userinfo: []   // 用户信息
+// ]
+
+if ($result['loginState'] === Constants::E_AUTH) {
+    // 登录失败原因：`$result['error']`
     return;
 }
 
-// 使用微信用户信息（`$result['data']['userInfo']`）处理其它业务逻辑
+// 使用微信用户信息（`$result['userinfo']['userinfo']`）处理其它业务逻辑
 // ...
 ```
-
-阅读 Wafer Wiki 文档中的[会话服务](https://github.com/tencentyun/wafer/wiki/%E4%BC%9A%E8%AF%9D%E6%9C%8D%E5%8A%A1)了解更多关于会话服务的技术资料。
 
 ### 使用信道服务
 
@@ -99,8 +125,13 @@ use \QCloud_WeApp_SDK\Tunnel\TunnelService;
 use \QCloud_WeApp_SDK\Tunnel\ITunnelHandler;
 
 class TunnelHandler implements ITunnelHandler {
+    // TODO: 传入登录的用户信息
+    public function __construct($userinfo) {
+
+    }
+
     // TODO: 实现 onRequest 方法，处理信道连接请求
-    public function onRequest($tunnelId, $userInfo) {
+    public function onRequest($tunnelId, $tunnelUrl) {
 
     }
 
@@ -124,13 +155,49 @@ $handler = new TunnelHandler();
 TunnelService::handle($handler, array('checkLogin' => TRUE));
 ```
 
-使用信道服务需要实现处理器，来获取处理信道的各种事件，具体可参考接口 [ITunnelHandler](https://github.com/tencentyun/wafer-php-server-sdk/blob/master/API.md#itunnelhandler) 的 API 文档以及配套 Demo 中的 [ChatTunnelHandler](https://github.com/tencentyun/wafer-php-server-demo/blob/master/application/business/ChatTunnelHandler.php) 的实现。
+使用信道服务需要实现处理器，来获取处理信道的各种事件，具体可参考接口 [ITunnelHandler](/API.md#itunnelhandler) 的 API 文档以及配套 Demo 中的 [ChatTunnelHandler](/application/business/ChatTunnelHandler.php) 的实现。
 
-阅读 Wafer Wiki 中的[信道服务](https://github.com/tencentyun/wafer/wiki/%E4%BF%A1%E9%81%93%E6%9C%8D%E5%8A%A1)了解更多解决方案中关于信道服务的技术资料。
+### MySQL 操作类
+
+SDK 在 PDO 的基础上完成了对增删改查等常用操作的封装，并默认会在初始化 SDK 的时候连接数据库，直接通过如下代码可以快速使用 MySQL 操作类：
+
+> **注意：**MySQL 操作类为静态类
+
+```php
+use \QCloud_WeApp_SDK\Mysql\Mysql as DB;
+
+// 查询数据
+$res = DB::row('cSessionInfo', ['*'], ['open_id' => '1234567890']);     // 查询一条
+$res = DB::select('cSessionInfo', ['*'], ['open_id' => '1234567890']);  // 查询多条
+
+// 插入数据
+$res = DB::insert('cSessionInfo', ['open_id' => '1234567890']);
+
+// 更新数据
+$res = DB::update('cSessionInfo', ['open_id' => '1234567890'], ['uuid' => '1']);
+
+// 删除数据
+$res = DB::delete('cSessionInfo', ['open_id' => '1234567890']);
+```
+
+具体配置项说明请查看：[API 文档](/API.md#MySQL)。
+
+### COS 实例
+
+SDK 导出了一个 COS V5 API 实例，可以使用以下代码获取：
+
+```php
+use \QCloud_WeApp_SDK\Cos\CosAPI as Cos;
+
+$cosClient = Cos::getInstance();
+$cosClient->upload('mybucket', 'test.txt', 'Hello World')->toArray();
+```
+
+更多关于 `Cos::getInstance()` 返回 COS 实例的 API，可以查看 [COS PHP SDK V5 文档](https://github.com/tencentyun/cos-php-sdk-v5)
 
 ### 详细示例
 
-参见项目：[Wafer 服务端 DEMO - PHP](https://github.com/tencentyun/wafer-php-server-demo)
+参见项目：[Wafer2 服务端 DEMO - PHP](https://github.com/tencentyun/wafer2-php-server-demo)
 
 ## LICENSE
 
@@ -138,11 +205,5 @@ TunnelService::handle($handler, array('checkLogin' => TRUE));
 
 [packagist-image]: https://img.shields.io/packagist/v/qcloud/weapp-sdk.svg
 [packagist-url]: https://packagist.org/packages/qcloud/weapp-sdk
-[php-image]: https://img.shields.io/badge/PHP-%3E%3D%205.4-8892BF.svg
-[php-url]: https://secure.php.net/
-[travis-image]: https://travis-ci.org/tencentyun/wafer-php-server-sdk.svg?branch=master
-[travis-url]: https://travis-ci.org/tencentyun/wafer-php-server-sdk
-[coveralls-image]: https://coveralls.io/repos/github/tencentyun/wafer-php-server-sdk/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/tencentyun/wafer-php-server-sdk?branch=master
 [license-image]: https://img.shields.io/github/license/tencentyun/wafer-php-server-sdk.svg
 [license-url]: LICENSE
