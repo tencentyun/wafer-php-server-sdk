@@ -38,4 +38,7 @@ class Constants {
 
     /* 信道连接 */
     const E_CONNECT_TO_TUNNEL_SERVER = 'E_CONNECT_TO_TUNNEL_SERVER';
+
+    /* COS */
+    const E_INIT_COS_SDK = 'E_INIT_COS_SDK';
 }

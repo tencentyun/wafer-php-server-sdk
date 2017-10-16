@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "qcloud/cos-sdk-v5": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
