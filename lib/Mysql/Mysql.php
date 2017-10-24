@@ -24,7 +24,7 @@ class Mysql
             $_pass = $mysql['pass'];
             $_char = $mysql['char'];
             $_db = $mysql['db'];
-            $dsn = "mysql:host=$_host;dbname=$_db;charset=$_char";
+            $dsn = "mysql:host=$_host;dbname=$_db;port=$_port;charset=$_char";
 
             try {
                 self::$conn = new PDO($dsn, $_user, $_pass);

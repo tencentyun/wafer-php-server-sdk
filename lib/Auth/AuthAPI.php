@@ -115,7 +115,7 @@ class AuthAPI {
         ];
 
         list($status, $body) = array_values(Request::get([
-            'url' => 'https://api.weixin.qq.com/sns/jscode2session?' . http_build_query($requestData),
+            'url' => 'https://api.weixin.qq.com/sns/jscode2session?' . http_build_query($requestParams),
             'timeout' => Conf::getNetworkTimeout()
         ]));
 
