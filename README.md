@@ -3,6 +3,9 @@
 [![Latest Stable Version][packagist-image]][packagist-url]
 [![License][license-image]][license-url]
 
+#### 注意
+Wafer PHP SDK 已经全面升级 2.0 以支持 Wafer2，如果您想查看 Wafer1 的 PHP SDK 文档，请[点击这里](https://github.com/tencentyun/wafer-php-server-sdk/tree/v0.4.4)。
+
 ## 介绍
 
 Wafer 服务端 SDK 是腾讯云为微信小程序开发者提供的快速开发库，SDK 封装了以下功能供小程序开发者快速调用：
