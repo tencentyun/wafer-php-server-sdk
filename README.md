@@ -200,7 +200,7 @@ $cosClient->upload('mybucket', 'test.txt', 'Hello World')->toArray();
 
 ### 详细示例
 
-参见项目：[Wafer2 服务端 DEMO - PHP](https://github.com/tencentyun/wafer2-php-server-demo)
+参见项目：[Wafer2 服务端 DEMO - PHP](https://github.com/tencentyun/wafer2-quickstart-php)
 
 ## LICENSE
 
