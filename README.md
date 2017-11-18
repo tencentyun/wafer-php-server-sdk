@@ -46,7 +46,7 @@ require_once 'path/to/qcloud/weapp-sdk/AutoLoader.php';
 ### 初始化 SDK 配置项
 
 ```php
-use \QCloud_WeApp_SDK\Conf;
+use \QCloud_WeApp_SDK\Conf as Config;
 
 Config::setup(array(
     'appId'          => '微信小程序 AppID',
