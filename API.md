@@ -361,13 +361,13 @@ DB::insert('tableName', [
 use QCloud_WeApp_SDK\Mysql\Mysql as DB;
 
 // 条件为字符串
-$rows = DB::select('tableName', 'nickname = Jason');
+$rows = DB::select('tableName', ['*'], 'nickname = Jason');
 
 // 条件为数组
-$rows = DB::select('tableName', ['nickname = Jason']);
+$rows = DB::select('tableName', ['*'], ['nickname = Jason']);
 
 // 条件为 key-value 数组
-$rows = DB::select('tableName', ['nickname' => 'Jason']);
+$rows = DB::select('tableName', ['*'], ['nickname' => 'Jason']);
 
 // 查询结果
 // $rows > [['nickname' => 'Jason','age' => 21]]
@@ -395,13 +395,13 @@ $rows = DB::select('tableName', ['nickname' => 'Jason']);
 use QCloud_WeApp_SDK\Mysql\Mysql as DB;
 
 // 条件为字符串
-$rows = DB::row('tableName', 'nickname = Jason');
+$rows = DB::row('tableName', ['*'], 'nickname = Jason');
 
 // 条件为数组
-$rows = DB::row('tableName', ['nickname = Jason']);
+$rows = DB::row('tableName', ['*'], ['nickname = Jason']);
 
 // 条件为 key-value 数组
-$rows = DB::row('tableName', ['nickname' => 'Jason']);
+$rows = DB::row('tableName', ['*'], ['nickname' => 'Jason']);
 
 // 查询结果
 // $rows > ['nickname' => 'Jason','age' => 21]
