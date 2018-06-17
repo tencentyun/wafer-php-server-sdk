@@ -28,7 +28,11 @@ class LoginService {
 
     public static function check() {
         try {
-            $skey = self::getHttpHeader(Constants::WX_HEADER_SKEY);
+            $skey = Util::getHttpHeader(Constants::WX_HEADER_SKEY);
+
+            if (!$skey) {
+                throw new Exception("请求头未包含 skey，请配合客户端 SDK 登录后再进行请求");
+            }
 
             return AuthAPI::checkLogin($skey);
         } catch (Exception $e) {
