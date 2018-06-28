@@ -19,7 +19,9 @@ class AuthAPI {
      */
     public static function login($code, $encryptData, $iv) {
         // 1. 获取 session key
-        list($session_key, $openid) = array_values(self::getSessionKey($code));
+        $pack = self::getSessionKey($code);
+        $session_key = $pack['session_key'];
+        $openid = $pack['openid'];
 
         // 2. 生成 3rd key (skey)
         $skey = sha1($session_key . mt_rand());
