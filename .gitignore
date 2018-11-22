@@ -2,3 +2,6 @@ vendor/
 build/
 composer.lock
 .DS_Store
+
+# IDE
+/.idea/

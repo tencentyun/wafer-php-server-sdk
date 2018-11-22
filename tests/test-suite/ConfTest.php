@@ -26,6 +26,9 @@ class ConfTest extends PHPUnit_Framework_TestCase {
         $this->assertSame('(empty)', Conf::getLogPath());
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testSetupWithNonArrayValue() {
         Conf::setup('not an array');
     }

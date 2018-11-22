@@ -1,5 +1,5 @@
 {
-    "name": "qcloud/weapp-sdk",
+    "name": "awang/weapp-sdk",
     "type": "library",
     "description": "php sdk for qcloud weapp server",
     "keywords": ["qcloud", "sdk", "weapp"],
@@ -7,14 +7,12 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "miusuncle",
-            "email": "miusuncle@gmail.com",
-            "homepage": "http://miusuncle.github.io/"
+            "name": "Aaron Wang",
+            "email": "aaron.ido@gmail.com"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "qcloud/cos-sdk-v5": "^1.1"
+        "php": ">=5.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",

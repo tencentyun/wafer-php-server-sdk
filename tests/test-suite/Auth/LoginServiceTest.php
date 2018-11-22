@@ -2,12 +2,14 @@
 
 use \QCloud_WeApp_SDK\Conf;
 use \QCloud_WeApp_SDK\Auth\LoginService;
-use \QCloud_WeApp_SDK\Auth\Constants;
+use \QCloud_WeApp_SDK\Constants;
 
 /**
  * @runTestsInSeparateProcesses
  */
-class LoginServiceTest extends PHPUnit_Framework_TestCase {
+class LoginServiceTest extends PHPUnit_Framework_TestCase
+{
+    private $loginService;
     public static function setUpBeforeClass() {
         Conf::setup(array(
             'ServerHost' => SERVER_HOST,
@@ -18,6 +20,12 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
     }
 
     public function setUp() {
+        // Create a stub for the SomeClass class.
+        $appInfo = new stdClass();
+        $appInfo->appid = 'test';
+        $appInfo->secret = 'test';
+        $appInfo->session_duration = 86400;
+        $this->loginService = new LoginService($appInfo);
         $this->setOutputCallback(function () {});
     }
 
@@ -26,9 +34,9 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase {
         $this->setHttpHeader(Constants::WX_HEADER_ENCRYPTED_DATA, 'valid-data');
         $this->setHttpHeader(Constants::WX_HEADER_IV, 'valid-iv');
 
-        $result = LoginService::login();
-        $this->assertSame(0, $result['code']);
-        $this->assertArrayHasKey('userInfo', $result['data']);
+        $result = $this->loginService->login();
+        $this->assertSame(0, $result['loginState']);
+        $this->assertArrayHasKey('userinfo', $result);
 
         $body = json_decode($this->getActualOutput(), TRUE);
         $this->assertSame(1, $body[Constants::WX_SESSION_MAGIC_ID]);
